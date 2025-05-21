@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +27,7 @@ public class Painting extends BaseEntity {
     private String imageUrl;
     private String title;
     private String artist;
+    private String background;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exhibitions_id")
@@ -35,4 +38,5 @@ public class Painting extends BaseEntity {
 
     @OneToMany(mappedBy = "painting", cascade = CascadeType.ALL)
     private List<Object> objects = new ArrayList<>();
+
 }
