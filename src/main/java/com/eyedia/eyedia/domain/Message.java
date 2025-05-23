@@ -1,11 +1,42 @@
+//package com.eyedia.eyedia.domain;
+//
+//import com.eyedia.eyedia.domain.common.BaseEntity;
+//import com.eyedia.eyedia.domain.enums.SenderType;
+//import jakarta.persistence.*;
+//
+//@Entity
+//@Table(name = "messages")
+//public class Message extends BaseEntity {
+//
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    private Long messagesId;
+//
+//    @Enumerated(EnumType.STRING)
+//    private SenderType sender;
+//
+//    @Lob
+//    private String content;
+//
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "paintings_id")
+//    private Painting painting;
+//
+//}
+
 package com.eyedia.eyedia.domain;
 
 import com.eyedia.eyedia.domain.common.BaseEntity;
 import com.eyedia.eyedia.domain.enums.SenderType;
 import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
 @Table(name = "messages")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 public class Message extends BaseEntity {
 
     @Id

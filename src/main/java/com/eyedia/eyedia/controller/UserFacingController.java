@@ -20,10 +20,10 @@ public class UserFacingController {
     }
 
     // [2] 그림에 대한 전체적인 설명을 DB에서 조회(객체 아님)
-    @GetMapping("/{paintingId}/db-description")
-    public ResponseEntity<PaintingDescriptionResponse> getDescription(@PathVariable Long paintingId) {
-        return ResponseEntity.ok(userFacingService.getLatestDescription(paintingId));
-    }
+//    @GetMapping("/{paintingId}/db-description")
+//    public ResponseEntity<PaintingDescriptionResponse> getDescription(@PathVariable Long paintingId) {
+//        return ResponseEntity.ok(userFacingService.getLatestDescription(paintingId));
+//    }
 
     // [3] 작가 정보
     @GetMapping("/{paintingId}/artist")

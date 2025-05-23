@@ -22,13 +22,13 @@ public class UserFacingService {
                 .build();
     }
 
-    public PaintingDescriptionResponse getLatestDescription(Long id) {
-        String latest = messageRepository.findLatestAiMessageByPaintingId(id).orElse("설명이 없습니다.");
-        return PaintingDescriptionResponse.builder()
-                .paintingId(id)
-                .description(latest)
-                .build();
-    }
+//    public PaintingDescriptionResponse getLatestDescription(Long id) {
+//        String latest = messageRepository.findLatestAiMessageByPaintingId(id).orElse("설명이 없습니다.");
+//        return PaintingDescriptionResponse.builder()
+//                .paintingId(id)
+//                .description(latest)
+//                .build();
+//    }
 
     public PaintingArtistResponse getArtistInfo(Long id) {
         Painting painting = paintingRepository.findById(id)
