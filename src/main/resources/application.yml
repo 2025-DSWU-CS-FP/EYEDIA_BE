@@ -1,34 +1,29 @@
-spring:
-  datasource:
-    url: jdbc:h2:mem:testdb
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-        use_sql_comments: true
-        hbm2ddl.auto: update
-
-  sql:
-    init:
-      mode: never
-
+pring:
+  profiles:
+    include:
+      - database
   data:
     redis:
       repositories:
         enabled: false
 
+  sql:
+    init:
+      mode: never
   servlet:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        show_sql: true
+        format_sql: false
+        generate_ddl: true
+        use_sql_comments: true
+        hbm2ddl:
+          auto: create
+        default_batch_fetch_size: 1000
+    database: mysql
