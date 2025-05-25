@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/paintings")
+@RequestMapping("/api/v1/paintings")
 @RequiredArgsConstructor
 @Tag(name = "User Facing Controller", description = "사용자가 그림 정보를 확인할 수 있는 API")
 public class UserFacingController {
@@ -34,6 +34,10 @@ public class UserFacingController {
     @GetMapping("/{paintingId}/chats")
     public ResponseEntity<?> getChatMessages(@PathVariable Long paintingId) {
         return ResponseEntity.ok(userFacingService.getChatMessagesByPaintingId(paintingId));
+    }
+    @RequestMapping("/test")
+    public String testAPI(){
+        return "test";
     }
 
 }

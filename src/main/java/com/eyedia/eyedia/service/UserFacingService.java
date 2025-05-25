@@ -10,7 +10,6 @@ import com.eyedia.eyedia.repository.PaintingRepository;
 import com.eyedia.eyedia.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
@@ -37,15 +36,16 @@ public class UserFacingService {
                 .message("채팅방을 시작합니다.")
                 .build();
     }
+
     public List<MessageDTO.ChatMessageDTO> getChatMessagesByPaintingId(Long paintingId) {
         return messageRepository.findByPainting_PaintingsIdOrderByCreatedAtAsc(paintingId).stream()
                 .map(message -> MessageDTO.ChatMessageDTO.builder()
                         .sender(message.getSender().name())
                         .content(message.getContent())
+                        .paintingId(paintingId)
                         .timestamp(message.getCreatedAt().toString())
                         .build())
                 .toList();
     }
-
 
 }
