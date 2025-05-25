@@ -19,7 +19,7 @@ public class ObjectDTO {
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
-    public class PaintingDescriptionRequest {
+    public static class PaintingDescriptionRequest {
         private Long paintingId;
         private String description;
     }
@@ -28,7 +28,7 @@ public class ObjectDTO {
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
-    public class ObjectDescriptionRequest {
+    public static class ObjectDescriptionRequest {
         private Long paintingId;
         private Long objectId;
         private String description;
