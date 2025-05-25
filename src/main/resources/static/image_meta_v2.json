@@ -1,0 +1,36 @@
+[
+  {
+    "full_image_id": "image-7.jpg",
+    "full_image_description": "The fruit bowl contains pears that are a mix of yellow and red. The pears are round, luscious, and have a ripe, vibrant color. The bowl is made of brown pottery, with a natural, earthy texture. A small pottery cup with a handle is placed on the left. On the right, there is a tall pottery jug with a pronounced curved shape. The pottery pieces all share a unified brown tone, creating harmony. White flowers and green leaves are arranged around the pears and on the table. The flowers give a delicate and clean impression, gently balancing the warm tones of the fruit. The background is painted in a dark olive-green shade, creating a calm and quiet atmosphere. The background’s subdued colors make the fruit and pottery in the foreground stand out more. Light comes from the upper left, reflecting softly on the objects. This creates clear contrasts of light and shadow, enhancing the three-dimensional effect of the fruit, bowl, and flowers. The overall color scheme is warm, producing a stable and serene mood. The difference in brightness between the background and the objects naturally draws the viewer’s gaze to the center. This still life painting evokes the image of a humble countryside setting. It neatly expresses the richness of nature and the calmness of everyday life. It conveys a quiet beauty that is not heavy or overwhelming.",
+    "crops": [
+      {
+        "crop_id": "crops/vase_1.jpg",
+        "crop_description": "The pears are round, luscious, and have a ripe, vibrant color The bowl is made of brown pottery, with a natural, earthy texture"
+      },
+      {
+        "crop_id": "crops/bowl_1.jpg",
+        "crop_description": "The fruit bowl contains pears that are a mix of yellow and red The bowl is made of brown pottery, with a natural, earthy texture"
+      },
+      {
+        "crop_id": "crops/apple_1.jpg",
+        "crop_description": "White flowers and green leaves are arranged around the pears and on the table The fruit bowl contains pears that are a mix of yellow and red"
+      },
+      {
+        "crop_id": "crops/orange_1.jpg",
+        "crop_description": "This still life painting evokes the image of a humble countryside setting The pears are round, luscious, and have a ripe, vibrant color"
+      },
+      {
+        "crop_id": "crops/bowl_2.jpg",
+        "crop_description": "The fruit bowl contains pears that are a mix of yellow and red The bowl is made of brown pottery, with a natural, earthy texture"
+      },
+      {
+        "crop_id": "crops/vase_2.jpg",
+        "crop_description": "The pears are round, luscious, and have a ripe, vibrant color The bowl is made of brown pottery, with a natural, earthy texture"
+      },
+      {
+        "crop_id": "crops/dining table_1.jpg",
+        "crop_description": "This still life painting evokes the image of a humble countryside setting The overall color scheme is warm, producing a stable and serene mood"
+      }
+    ]
+  }
+]
