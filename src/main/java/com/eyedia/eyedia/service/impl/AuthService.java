@@ -1,6 +1,6 @@
 package com.eyedia.eyedia.service.impl;
 import com.eyedia.eyedia.domain.enums.Gender;
-
+import com.eyedia.eyedia.config.jwt.JwtProvider;
 import com.eyedia.eyedia.domain.User;
 import com.eyedia.eyedia.dto.UserSignupDTO;
 import com.eyedia.eyedia.dto.UserLoginDTO;
@@ -15,6 +15,7 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtProvider jwtProvider;
 
     // 회원가입
     public void signup(UserSignupDTO dto) {
@@ -36,12 +37,15 @@ public class AuthService {
     }
 
     // 로그인
-    public boolean login(UserLoginDTO dto) {
+    public String login(UserLoginDTO dto) {
         User user = userRepository.findById(dto.getId())
-                .orElse(null);
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 아이디입니다."));
 
-        if (user == null) return false;
+        if (!passwordEncoder.matches(dto.getPw(), user.getPw())) {
+            throw new RuntimeException("비밀번호가 일치하지 않습니다.");
+        }
 
-        return passwordEncoder.matches(dto.getPw(), user.getPw());
+        return jwtProvider.generateToken(user.getId());
     }
+
 }
