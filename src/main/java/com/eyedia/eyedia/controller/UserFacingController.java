@@ -29,20 +29,11 @@ public class UserFacingController {
         // userFacingService.getLatestDescription(paintingId)
         return ResponseEntity.ok().build();
     }
+    // 채팅 히스토리 가져오기
+    @Operation(summary = "채팅 메시지 목록 조회", description = "특정 그림에 대한 사용자-AI 대화 내역을 조회합니다.")
+    @GetMapping("/{paintingId}/chats")
+    public ResponseEntity<?> getChatMessages(@PathVariable Long paintingId) {
+        return ResponseEntity.ok(userFacingService.getChatMessagesByPaintingId(paintingId));
+    }
 
-//    @Operation(summary = "작가 정보 조회", description = "그림 작가의 정보를 조회합니다.")
-//    @GetMapping("/{paintingName}/artist")
-//    public ResponseEntity<PaintingArtistResponse> getArtistInfo(@PathVariable String paintingName) {
-//        Map<String, Object> result = faissSearchService.searchByFullImageId(paintingName);
-//        String author = (String) result.getOrDefault("author_description", "알 수 없음");
-//        return ResponseEntity.ok(new PaintingArtistResponse(paintingName, author));
-//    }
-//
-//    @Operation(summary = "배경 정보 조회", description = "그림의 배경 정보를 조회합니다.")
-//    @GetMapping("/{paintingName}/background")
-//    public ResponseEntity<PaintingBackgroundResponse> getBackgroundInfo(@PathVariable String paintingName) {
-//        Map<String, Object> result = faissSearchService.searchByFullImageId(paintingName);
-//        String background = (String) result.getOrDefault("background_description", "정보 없음");
-//        return ResponseEntity.ok(new PaintingBackgroundResponse(paintingName, background));
-//    }
 }

@@ -1,5 +1,6 @@
 package com.eyedia.eyedia.dto;
 
+import com.eyedia.eyedia.domain.enums.SenderType;
 import lombok.*;
 
 public class AiToBackendDTO {
@@ -11,11 +12,13 @@ public class AiToBackendDTO {
     }
 
     @Getter
+    @Builder
     @AllArgsConstructor
     public static class ObjectDescriptionRequest {
         private Long paintingId;
         private Long objectId;
         private String description;
+        private SenderType sendingType;
     }
 
     @Getter

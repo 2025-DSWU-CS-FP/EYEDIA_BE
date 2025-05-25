@@ -1,5 +1,8 @@
 package com.eyedia.eyedia.config;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+
 public class JwtUtil {
 
     public static Long getUserIdFromToken(String token) {

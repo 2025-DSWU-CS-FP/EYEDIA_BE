@@ -13,10 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AiToBackendController {
 
-
-    // ㅎㅐ당 그림이 맞는지 물어봄 yes-> 채팅방 시작 . 모델에서 -> 백엔드로 거치고 -> 프론트
-
-    // ai -> 백엔드. 객체 인식 시, 전체 이미지 id, 크롭 객체 id, llm생성 설명 - o
     private final MessageCommandService messageService;
 
     @PostMapping("/painting-detection")

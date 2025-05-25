@@ -3,14 +3,15 @@ package com.eyedia.eyedia.service;
 import com.eyedia.eyedia.config.SecurityUtil;
 import com.eyedia.eyedia.domain.Painting;
 import com.eyedia.eyedia.domain.User;
-import com.eyedia.eyedia.dto.UserFacingDTO.PaintingArtistResponse;
-import com.eyedia.eyedia.dto.UserFacingDTO.PaintingBackgroundResponse;
+import com.eyedia.eyedia.dto.MessageDTO;
 import com.eyedia.eyedia.dto.UserFacingDTO.PaintingConfirmResponse;
 import com.eyedia.eyedia.repository.MessageRepository;
 import com.eyedia.eyedia.repository.PaintingRepository;
 import com.eyedia.eyedia.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -36,23 +37,15 @@ public class UserFacingService {
                 .message("채팅방을 시작합니다.")
                 .build();
     }
-
-
-    public PaintingArtistResponse getArtistInfo(Long id) {
-        Painting painting = paintingRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Painting not found"));
-        return PaintingArtistResponse.builder()
-                .paintingId(id)
-                .artist(painting.getArtist())
-                .build();
+    public List<MessageDTO.ChatMessageDTO> getChatMessagesByPaintingId(Long paintingId) {
+        return messageRepository.findByPainting_PaintingsIdOrderByCreatedAtAsc(paintingId).stream()
+                .map(message -> MessageDTO.ChatMessageDTO.builder()
+                        .sender(message.getSender().name())
+                        .content(message.getContent())
+                        .timestamp(message.getCreatedAt().toString())
+                        .build())
+                .toList();
     }
 
-    public PaintingBackgroundResponse getBackgroundInfo(Long id) {
-        Painting painting = paintingRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Painting not found"));
-        return PaintingBackgroundResponse.builder()
-                .paintingId(id)
-                .background(painting.getBackground())
-                .build();
-    }
+
 }
