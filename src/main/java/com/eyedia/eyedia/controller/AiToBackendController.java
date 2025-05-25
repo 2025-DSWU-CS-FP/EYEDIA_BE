@@ -1,13 +1,15 @@
 package com.eyedia.eyedia.controller;
 
+import com.eyedia.eyedia.domain.Painting;
 import com.eyedia.eyedia.dto.AiToBackendDTO;
+import com.eyedia.eyedia.repository.PaintingRepository;
 import com.eyedia.eyedia.service.MessageCommandService;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
@@ -16,8 +18,33 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 @RequiredArgsConstructor
 public class AiToBackendController {
 
+    private final PaintingRepository paintingRepository;
 
-    // ㅎㅐ당 그림이 맞는지 물어봄 yes-> 채팅방 시작 . 모델에서 -> 백엔드로 거치고 -> 프론트
+    // 해당 그림이 맞는지 물어봄 yes-> 채팅방 시작 . 모델에서 -> 백엔드로 거치고 -> 프론트
+    @Operation(
+            summary = "AI 후보 그림 정보 조회",
+            description = "AI가 선택한 그림 후보 ID를 받아, 해당 그림의 제목, 작가, 이미지 URL을 반환합니다.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "성공적으로 그림 정보 반환",
+                            content = @Content(schema = @Schema(implementation = AiToBackendDTO.MatchingCandidateResponse.class))),
+                    @ApiResponse(responseCode = "400", description = "존재하지 않는 그림 ID",
+                            content = @Content)
+            }
+    )
+    @PostMapping("/matching/candidate")
+    public ResponseEntity<AiToBackendDTO.MatchingCandidateResponse> receiveCandidate(@RequestBody AiToBackendDTO.MatchingCandidateRequest request) {
+        Painting painting = paintingRepository.findById(request.getCandidateId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 그림이 없습니다."));
+
+        AiToBackendDTO.MatchingCandidateResponse response = AiToBackendDTO.MatchingCandidateResponse.builder()
+                .id(painting.getPaintingsId())
+                .title(painting.getTitle())
+                .artist(painting.getArtist())
+                .imageUrl(painting.getImageUrl())
+                .build();
+
+        return ResponseEntity.ok(response);
+    }
 
     // ai -> 백엔드. 객체 인식 시, 전체 이미지 id, 크롭 객체 id, llm생성 설명 - o
     private final MessageCommandService messageService;
@@ -30,6 +57,7 @@ public class AiToBackendController {
 
         return ResponseEntity.ok().build();
     }
+
     // no 일 경우 다시 찾아야함
     @Operation(summary = "재촬영 요청", description = "AI가 재인식이 필요하다고 판단하여 재촬영 요청을 보냅니다.")
     @PostMapping("/recapture")

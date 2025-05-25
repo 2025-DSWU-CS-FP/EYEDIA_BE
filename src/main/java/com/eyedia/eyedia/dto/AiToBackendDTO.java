@@ -6,6 +6,27 @@ import lombok.*;
 public class AiToBackendDTO {
 
     @Getter
+    @Builder
+    @AllArgsConstructor
+    @Schema(description = "AI가 백엔드에 전달하는 그림 후보 요청 DTO")
+    public static class MatchingCandidateRequest {
+        @Schema(description = "그림 후보 ID", example = "12")
+        private Long candidateId;
+    }
+
+
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    public static class MatchingCandidateResponse {
+        private Long id;
+        private String title;
+        private String artist;
+        private String imageUrl;
+    }
+
+
+    @Getter
     @AllArgsConstructor
     @NoArgsConstructor
     public static class PaintingDescriptionRequest {
