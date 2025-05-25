@@ -1,5 +1,5 @@
 package com.eyedia.eyedia.controller;
-
+import java.util.Map;
 import com.eyedia.eyedia.dto.UserLoginDTO;
 import com.eyedia.eyedia.dto.UserSignupDTO;
 import com.eyedia.eyedia.service.impl.AuthService;
@@ -23,12 +23,12 @@ public class AuthController {
 
     // 로그인 API
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody UserLoginDTO loginDTO) {
-        boolean success = authService.login(loginDTO);
-        if (success) {
-            return ResponseEntity.ok("로그인 성공");
-        } else {
-            return ResponseEntity.status(401).body("로그인 실패: 아이디 또는 비밀번호가 올바르지 않습니다.");
+    public ResponseEntity<?> login(@RequestBody UserLoginDTO loginDTO) {
+        try {
+            String token = authService.login(loginDTO);
+            return ResponseEntity.ok(Map.of("accessToken", token));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(401).body("로그인 실패: " + e.getMessage());
         }
     }
 }

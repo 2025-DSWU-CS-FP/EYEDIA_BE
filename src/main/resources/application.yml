@@ -1,6 +1,13 @@
 spring:
+  datasource:
+    url: ${LOCAL_DB_URL}
+    username: ${LOCAL_DB_USERNAME}
+    password: ${LOCAL_DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
   profiles:
     include:
+      - jwt
       - database
   data:
     redis:
@@ -10,6 +17,7 @@ spring:
   sql:
     init:
       mode: never
+
   servlet:
     multipart:
       max-file-size: 10MB
