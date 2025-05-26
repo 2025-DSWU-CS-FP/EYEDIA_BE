@@ -1,5 +1,6 @@
 package com.eyedia.eyedia.dto;
 
+import com.eyedia.eyedia.domain.enums.SenderType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
@@ -35,6 +36,7 @@ public class AiToBackendDTO {
     }
 
     @Getter
+    @Builder
     @AllArgsConstructor
     @NoArgsConstructor
     public static class ObjectDescriptionRequest {
@@ -46,6 +48,7 @@ public class AiToBackendDTO {
 
         @Schema(description = "AI가 생성한 설명", example = "오른쪽 아래에 위치한 곡선형 주전자입니다.")
         private String description;
+        private SenderType sendingType;
     }
 
     @Getter

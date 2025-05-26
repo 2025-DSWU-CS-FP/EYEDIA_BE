@@ -1,39 +1,43 @@
 package com.eyedia.eyedia.controller;
 
-import com.eyedia.eyedia.dto.UserFacingDTO.*;
+import com.eyedia.eyedia.dto.UserFacingDTO.PaintingConfirmResponse;
 import com.eyedia.eyedia.service.UserFacingService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/paintings")
+@RequestMapping("/api/v1/paintings")
 @RequiredArgsConstructor
+@Tag(name = "User Facing Controller", description = "사용자가 그림 정보를 확인할 수 있는 API")
 public class UserFacingController {
 
     private final UserFacingService userFacingService;
 
-    // [1] 사용자 그림 확인 후 채팅 시작
+    @Operation(summary = "그림 확인", description = "사용자가 그림을 확인하고 채팅을 시작여부를 선택합니다.")
     @PostMapping("/{paintingId}/confirm")
     public ResponseEntity<PaintingConfirmResponse> confirmPainting(@PathVariable Long paintingId) {
-        return ResponseEntity.ok(userFacingService.confirmPainting(paintingId)); // paintingId로 나머지 데이터 가져오기(추가적으로)
+        // confirm 후 채팅 시작
+        return ResponseEntity.ok(userFacingService.confirmPainting(paintingId));
     }
 
-    // [2] 그림에 대한 전체적인 설명을 DB에서 조회(객체 아님)
-//    @GetMapping("/{paintingId}/db-description")
-//    public ResponseEntity<PaintingDescriptionResponse> getDescription(@PathVariable Long paintingId) {
-//        return ResponseEntity.ok(userFacingService.getLatestDescription(paintingId));
-//    }
-
-    // [3] 작가 정보
-    @GetMapping("/{paintingId}/artist")
-    public ResponseEntity<PaintingArtistResponse> getArtistInfo(@PathVariable Long paintingId) {
-        return ResponseEntity.ok(userFacingService.getArtistInfo(paintingId));
+    @Operation(summary = "그림 설명 조회", description = "DB에서 그림에 대한 전체적인 설명을 조회합니다.")
+    @GetMapping("/{paintingId}/db-description")
+    public ResponseEntity<?> getDescription(@PathVariable Long paintingId) {
+        // userFacingService.getLatestDescription(paintingId)
+        return ResponseEntity.ok().build();
+    }
+    // 채팅 히스토리 가져오기
+    @Operation(summary = "채팅 메시지 목록 조회", description = "특정 그림에 대한 사용자-AI 대화 내역을 조회합니다.")
+    @GetMapping("/{paintingId}/chats")
+    public ResponseEntity<?> getChatMessages(@PathVariable Long paintingId) {
+        return ResponseEntity.ok(userFacingService.getChatMessagesByPaintingId(paintingId));
+    }
+    @RequestMapping("/test")
+    public String testAPI(){
+        return "test";
     }
 
-    // [4] 배경 정보
-    @GetMapping("/{paintingId}/background")
-    public ResponseEntity<PaintingBackgroundResponse> getBackgroundInfo(@PathVariable Long paintingId) {
-        return ResponseEntity.ok(userFacingService.getBackgroundInfo(paintingId));
-    }
 }

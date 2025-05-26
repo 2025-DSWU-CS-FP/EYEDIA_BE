@@ -32,11 +32,11 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "messages")
+@Builder
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Builder
+@Table(name = "messages")
 public class Message extends BaseEntity {
 
     @Id

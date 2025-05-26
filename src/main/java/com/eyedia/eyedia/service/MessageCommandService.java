@@ -9,8 +9,6 @@ import com.eyedia.eyedia.repository.PaintingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-
 @Service
 @RequiredArgsConstructor
 public class MessageCommandService {
@@ -34,5 +32,6 @@ public class MessageCommandService {
                 .build();
 
         messageRepository.save(message);
+
     }
 }

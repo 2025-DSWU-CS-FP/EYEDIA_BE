@@ -33,7 +33,7 @@ public class AiToBackendController {
     )
     @PostMapping("/matching/candidate")
     public ResponseEntity<AiToBackendDTO.MatchingCandidateResponse> receiveCandidate(@RequestBody AiToBackendDTO.MatchingCandidateRequest request) {
-        Painting painting = paintingRepository.findById(request.getCandidateId())
+        Painting painting = paintingRepository.findByPaintingsId(request.getCandidateId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 그림이 없습니다."));
 
         AiToBackendDTO.MatchingCandidateResponse response = AiToBackendDTO.MatchingCandidateResponse.builder()
