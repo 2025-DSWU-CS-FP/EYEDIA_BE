@@ -59,30 +59,33 @@ public class ChatController {
         messageRepository.save(userMessage);
 
         // FastAPI 호출
-        Map<String, Object> payload = Map.of(
-                "question", request.getContent(),
-                "painting_id", request.getPaintingId()
-        );
+        String aiContent;
+        try {
+            Map<String, Object> payload = Map.of(
+                    "full_image_id", painting.getPaintingsId(),  // ✅ 실제 파일명일 경우
+                    "crop_description", request.getContent()
+            );
+            ResponseEntity<String> response = restTemplate.postForEntity(MODEL_API_URL, payload, String.class);
+            aiContent = response.getBody();
+        } catch (Exception e) {
+            aiContent = "AI 응답을 불러오는 데 실패했습니다.";
+        }
 
-        //Todo(채민): 백엔드 -> 모델 전송 부분
-
-        ResponseEntity<String> response = restTemplate.postForEntity(MODEL_API_URL, payload, String.class);
         // AI 응답 메시지 저장
         Message aiMessage = Message.builder()
                 .sender(SenderType.ASSISTANT)
-                .content(response.getBody())
+                .content(aiContent)
                 .painting(painting).build();
-        messageRepository.save(userMessage);
+        messageRepository.save(aiMessage);
 
         // AI 응답 DTO
         AiToBackendDTO.ObjectDescriptionRequest aiMessageDto = AiToBackendDTO.ObjectDescriptionRequest.builder()
                 .sendingType(SenderType.ASSISTANT)
-                .description(response.getBody())
-                .paintingId(request.getPaintingId())
+                .description(aiMessage.getContent())
+                .paintingId(aiMessage.getPainting().getPaintingsId())
                 .build();
-        messageRepository.save(userMessage);
 
-        messagingTemplate.convertAndSend("/room/user-" + userId, aiMessage);
+        messagingTemplate.convertAndSend("/room/user-" + userId, aiMessageDto);
     }
 
 
