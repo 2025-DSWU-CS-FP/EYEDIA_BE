@@ -1,10 +1,8 @@
 package com.eyedia.eyedia.dto;
 
 import com.eyedia.eyedia.domain.enums.ChatType;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 
 public class MessageDTO {
 
@@ -18,6 +16,18 @@ public class MessageDTO {
         private ChatType chatType;
         private String timestamp;   // ISO 포맷 문자열
 
+    }
+    @Builder
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PROTECTED)
+    @Data
+    public static class ModelResponseDTO {
+
+        @JsonProperty("full_image_id")
+        private String fullImageId;
+
+        @JsonProperty("object_description")
+        private String objectDescription;
     }
 
 }

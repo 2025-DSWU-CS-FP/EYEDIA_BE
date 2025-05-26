@@ -24,7 +24,7 @@ public class ChatController {
 
     private final SimpMessagingTemplate messagingTemplate;
     private final RestTemplate restTemplate;
-    private static final String MODEL_API_URL = "http://localhost:8000/api/llm/answer"; // FastAPI 주소
+    private static final String MODEL_API_URL = "http://localhost:8000/api/llm/answer"; // FastAPI 실제 API 주소
     private final PaintingRepository paintingRepository;
     private final MessageRepository messageRepository;
 
@@ -32,14 +32,11 @@ public class ChatController {
     public void sendMessage(@Payload MessageDTO.ChatMessageDTO message,
                             @Header("simpSessionAttributes") Map<String, Object> sessionAttributes) {
         Long userId = (Long) sessionAttributes.get("userId");
+        if (userId == null) return;
 
-        if (userId == null) return; // 인증 실패 처리
-
-        // 사용자 본인의 방에만 메시지 전송
         messagingTemplate.convertAndSend("/room/user-" + userId, message);
     }
 
-    // [1] 사용자 질문 → FastAPI 전달
     @MessageMapping("/chat.question")
     public void handleQuestion(@Payload MessageDTO.ChatMessageDTO request,
                                @Header("simpSessionAttributes") Map<String, Object> attrs) {
@@ -62,11 +59,18 @@ public class ChatController {
         String aiContent;
         try {
             Map<String, Object> payload = Map.of(
-                    "full_image_id", painting.getPaintingsId(),  // ✅ 실제 파일명일 경우
-                    "crop_description", request.getContent()
+                    "paintingId", painting.getPaintingsId(),
+                    "sendingType", SenderType.USER.name(),
+                    "descriptionId", request.getContent()
             );
-            ResponseEntity<String> response = restTemplate.postForEntity(MODEL_API_URL, payload, String.class);
-            aiContent = response.getBody();
+
+            ResponseEntity<MessageDTO.ModelResponseDTO> response = restTemplate.postForEntity(
+                    MODEL_API_URL, payload, MessageDTO.ModelResponseDTO.class
+            );
+
+            MessageDTO.ModelResponseDTO responseBody = response.getBody();
+            aiContent = responseBody != null ? responseBody.getObjectDescription() : "AI 응답 없음";
+
         } catch (Exception e) {
             aiContent = "AI 응답을 불러오는 데 실패했습니다.";
         }
@@ -75,10 +79,11 @@ public class ChatController {
         Message aiMessage = Message.builder()
                 .sender(SenderType.ASSISTANT)
                 .content(aiContent)
-                .painting(painting).build();
+                .painting(painting)
+                .build();
         messageRepository.save(aiMessage);
 
-        // AI 응답 DTO
+        // 프론트 전송용 DTO 생성
         AiToBackendDTO.ObjectDescriptionRequest aiMessageDto = AiToBackendDTO.ObjectDescriptionRequest.builder()
                 .sendingType(SenderType.ASSISTANT)
                 .description(aiMessage.getContent())
@@ -87,9 +92,4 @@ public class ChatController {
 
         messagingTemplate.convertAndSend("/room/user-" + userId, aiMessageDto);
     }
-
-
-
 }
-
-
