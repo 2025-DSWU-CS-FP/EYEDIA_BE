@@ -119,7 +119,7 @@ jobs:
           key: ${{ secrets.KEY }}
           port: 22
           source: "./docker-compose.yml"
-          target: "./someup"
+          target: "./eyedia"
 
       # SSH Key로 서버에 접속하고 docker-compose image를 pull 받고 실행하기
       - name: Access Server with SSH Key, pull and execute docker-compose image
