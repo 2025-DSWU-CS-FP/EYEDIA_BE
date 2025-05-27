@@ -2,6 +2,7 @@ package com.eyedia.eyedia.controller;
 
 import com.eyedia.eyedia.domain.Painting;
 import com.eyedia.eyedia.dto.AiToBackendDTO;
+import com.eyedia.eyedia.dto.PaintingDTO;
 import com.eyedia.eyedia.repository.PaintingRepository;
 import com.eyedia.eyedia.service.MessageCommandService;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -19,6 +20,32 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 public class AiToBackendController {
 
     private final PaintingRepository paintingRepository;
+
+    @Operation(
+            summary = "AI가 전달하는 그림 ID 수신",
+            description = "FastAPI에서 전송된 그림 ID를 수신합니다.",
+            requestBody = @RequestBody(
+                    required = true,
+                    content = @Content(
+                            schema = @Schema(implementation = AiToBackendDTO.PaintingDescriptionRequest.class)
+                    )
+            ),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "성공적으로 그림 ID를 수신함"),
+                    @ApiResponse(responseCode = "400", description = "요청 형식 오류"),
+                    @ApiResponse(responseCode = "500", description = "서버 오류")
+            }
+    )
+    @PostMapping("/painting-id")
+    public ResponseEntity<String> receivePaintingId(
+            @org.springframework.web.bind.annotation.RequestBody AiToBackendDTO.PaintingDescriptionRequest dto
+    ) {
+        Long paintingId = dto.getPaintingId();
+        System.out.println("🎨 받은 그림 ID: " + paintingId);
+
+        // 이후 로직: DB 조회, 메시지 생성 등
+        return ResponseEntity.ok("✅ 그림 ID 수신 완료: " + paintingId);
+    }
 
     // 해당 그림이 맞는지 물어봄 yes-> 채팅방 시작 . 모델에서 -> 백엔드로 거치고 -> 프론트
     @Operation(
