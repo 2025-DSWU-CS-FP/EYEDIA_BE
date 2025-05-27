@@ -15,7 +15,7 @@ public class MessageCommandService {
 
     private final MessageRepository messageRepository; // DB 저장
     private final PaintingRepository paintingRepository;
-
+ 
     public void save(AiToBackendDTO.ObjectDescriptionRequest request) {
 
         // 콘솔 출력

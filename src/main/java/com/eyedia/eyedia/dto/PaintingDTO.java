@@ -4,6 +4,8 @@ import lombok.*;
 
 public class PaintingDTO {
 
+
+
     @Getter
     public static class PaintingRequestDTO {
 
