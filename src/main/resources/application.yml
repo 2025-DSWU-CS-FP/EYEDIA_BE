@@ -1,7 +1,6 @@
 spring:
   profiles:
-    active:
-      dev
+    active: dev
     group:
       local-env:
         - local

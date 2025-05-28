@@ -81,7 +81,7 @@ jobs:
         run: |
           ./gradlew clean
           ./gradlew compileJava
-          ./gradlew build
+          ./gradlew build --stacktrace --info
         env:
           SPRING_PROFILES_ACTIVE: dev
 
