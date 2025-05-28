@@ -84,7 +84,7 @@ jobs:
           key: ${{ secrets.KEY }}
           port: 22
           source: "./docker-compose.yml"
-          target: "./eyedia"
+          target: "./EYEDIA_BE"
 
       # SSH Key로 서버에 접속하고 docker-compose image를 pull 받고 실행하기
       - name: Access Server with SSH Key, pull and execute docker-compose image
@@ -95,7 +95,7 @@ jobs:
           key: ${{ secrets.KEY }}
           port: 22
           script: |
-            cd eyedia
+            cd EYEDIA_BE
             sudo docker-compose down
             sudo docker-compose pull
             sudo docker-compose up -d
