@@ -2,7 +2,7 @@ version: '3'
 
 services:
   springboot:
-    container_name: eyedia
+    container_name: eyedia_be_springbootapp_1
     image: mumulmanager/dev-eyedia-be:latest
     ports:
       - 8080:8080
