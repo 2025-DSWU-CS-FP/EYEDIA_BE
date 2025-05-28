@@ -72,6 +72,16 @@ jobs:
           DEV_SECRET_DIR_FILE_NAME: application-swagger.yml
         run: echo $DEV_SECRET | base64 --decode >> $DEV_SECRET_DIR/$DEV_SECRET_DIR_FILE_NAME
 
+      # YAML 병합 충돌 디버깅용 출력
+      - name: Debug YAML files and keys
+        run: |
+          echo "[🔍 로드된 application-* 파일 목록]"
+          find src/main/resources -name "application*"
+
+          echo ""
+          echo "[📑 각 파일 내 server: 키 출력]"
+          grep "^server:" src/main/resources/application* || echo "No server key found"
+
       # ./gradlew 권한 설정
       - name: ./gradlew 권한 설정
         run: chmod +x ./gradlew
