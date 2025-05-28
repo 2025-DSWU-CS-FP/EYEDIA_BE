@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  springboot:
+    container_name: eyedia
+    image: mumulmanager/dev-eyedia-be:latest
+    ports:
+      - 8080:8080
+    environment:
+      SPRING_PROFILES_ACTIVE : dev-env # 사용할 profile
+    networks:
+      - my_network
+
+networks:
+  my_network:
+    driver: bridge
