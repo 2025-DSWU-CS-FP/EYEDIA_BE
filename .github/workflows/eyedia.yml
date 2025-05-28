@@ -44,6 +44,11 @@ jobs:
           ./gradlew build --stacktrace --info
         env:
           SPRING_PROFILES_ACTIVE: dev
+          RDS_USERNAME : ${{ secrets.RDS_USERNAME }}
+          RDS_PASSWORD : ${{ secrets.RDS_PASSWORD }}
+          RDS_URL : ${{ secrets.RDS_URL }}
+          JWT_SECRET : ${{ secrets.JWT_SECRET }}
+          JWT_EXPIRATION : ${{ secrets.JWT_EXPIRATION }}
 
       # Docker Build하고 DockerHub에 Push
       - name: Docker Build & Push to DockerHub
