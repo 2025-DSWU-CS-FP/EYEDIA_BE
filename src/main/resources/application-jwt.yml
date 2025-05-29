@@ -1,3 +1,6 @@
 jwt:
   secret: ${JWT_SECRET}
   expirationMs: ${JWT_EXPIRATION}
+  refresh_expirations: 86400
+  access_header: Authorization
+  refresh_cookie_name: refreshToken
