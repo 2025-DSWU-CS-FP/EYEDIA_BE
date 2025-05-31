@@ -19,19 +19,22 @@ public class UserFacingService {
     private final MessageRepository messageRepository;
     private final UserRepository userRepository;
 
-    public PaintingConfirmResponse confirmPainting(Long paintingId) {
+    public PaintingConfirmResponse confirmPainting(Long aiPaintingId) {
         Long userId = SecurityUtil.getCurrentUserId();
         // TODO: error응답 수정
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
         // 채팅방(PAINTING) 생성 및 사용자 연결
         Painting paintingRoom = Painting
                 .builder()
-                .paintingsId(paintingId).user(user).build();
+                .user(user)
+                .aiPaintingId(aiPaintingId)
+                .build();
         // TODO: 배경정보, 작가정보 가져오도록 수정
-        paintingRepository.save(paintingRoom);
+        Painting response = paintingRepository.save(paintingRoom);
 
         return PaintingConfirmResponse.builder()
-                .paintingId(paintingId)
+                .chatRoomId(response.getPaintingsId())
+                .aiPaintingId(response.getAiPaintingId())
                 .confirmed(true)
                 .message("채팅방을 시작합니다.")
                 .build();

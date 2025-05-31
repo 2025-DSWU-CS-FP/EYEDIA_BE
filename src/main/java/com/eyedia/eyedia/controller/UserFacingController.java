@@ -31,9 +31,9 @@ public class UserFacingController {
     }
     // 채팅 히스토리 가져오기
     @Operation(summary = "채팅 메시지 목록 조회", description = "특정 그림에 대한 사용자-AI 대화 내역을 조회합니다.")
-    @GetMapping("/{paintingId}/chats")
-    public ResponseEntity<?> getChatMessages(@PathVariable Long paintingId) {
-        return ResponseEntity.ok(userFacingService.getChatMessagesByPaintingId(paintingId));
+    @GetMapping("/{chatRoomId}/chats")
+    public ResponseEntity<?> getChatMessages(@PathVariable Long chatRoomId) {
+        return ResponseEntity.ok(userFacingService.getChatMessagesByPaintingId(chatRoomId));
     }
     @RequestMapping("/test")
     public String testAPI(){
