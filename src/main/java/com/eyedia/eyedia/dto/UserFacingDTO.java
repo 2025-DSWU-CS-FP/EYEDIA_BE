@@ -8,7 +8,8 @@ public class UserFacingDTO {
     @Builder
     @AllArgsConstructor
     public static class PaintingConfirmResponse {
-        private Long paintingId;
+        private Long chatRoomId;
+        private Long aiPaintingId;
         private boolean confirmed;
         private String message;
     }

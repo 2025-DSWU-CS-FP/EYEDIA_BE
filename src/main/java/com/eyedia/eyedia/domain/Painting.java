@@ -42,4 +42,7 @@ public class Painting extends BaseEntity {
     @JoinColumn(name = "users_id")
     private User user;
 
+    private Long aiPaintingId;
+
+
 }
