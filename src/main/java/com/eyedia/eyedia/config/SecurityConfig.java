@@ -51,7 +51,8 @@ public class SecurityConfig implements WebMvcConfigurer {
                         "http://localhost:8080",
                         "http://54.180.228.18:8080",
                         "http://localhost:3000",
-                        "http://localhost:8000"
+                        "http://localhost:8000",
+                        "https://eyedia.netlify.app"
                 )
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
                 .allowedHeaders("*")
