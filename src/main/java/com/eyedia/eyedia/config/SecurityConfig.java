@@ -35,7 +35,8 @@ public class SecurityConfig implements WebMvcConfigurer {
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/api-docs/**",
-                                "/ws-stomp"
+                                "/ws-stomp",
+                                "/"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
