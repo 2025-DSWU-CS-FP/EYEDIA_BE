@@ -36,7 +36,8 @@ public class SecurityConfig implements WebMvcConfigurer {
                                 "/v3/api-docs/**",
                                 "/api-docs/**",
                                 "/ws-stomp",
-                                "/"
+                                "/",
+                                "/health-check"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
