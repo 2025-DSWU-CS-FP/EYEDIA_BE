@@ -14,8 +14,6 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
@@ -61,7 +59,7 @@ public class ChatController {
         String aiContent;
         try {
             Map<String, Object> payload = Map.of(
-                    "paintingId", painting.getPaintingsId(),
+                    "paintingId", painting.getPaintingId(),
                     "sendingType", SenderType.USER.name(),
                     "descriptionId", request.getContent()
             );
@@ -87,38 +85,42 @@ public class ChatController {
 
         // 프론트 전송용 DTO 생성
         AiToBackendDTO.ObjectDescriptionRequest aiMessageDto = AiToBackendDTO.ObjectDescriptionRequest.builder()
-                .sendingType(SenderType.ASSISTANT)
                 .description(aiMessage.getContent())
-                .paintingId(aiMessage.getPainting().getPaintingsId())
+                .paintingId(painting.getPaintingId())
+                .title(painting.getTitle())
+                .artist(painting.getArtist())
+                .imageurl(painting.getImageUrl())
+                .objectId(painting.getObjectId())
                 .build();
+
 
         messagingTemplate.convertAndSend("/room/user-" + userId, aiMessageDto);
     }
-    @PostMapping("/chat/send-ai-message")
-    public ResponseEntity<String> sendAiMessage(@RequestBody AiToBackendDTO.ObjectDescriptionRequest request) {
-        Long paintingId = request.getPaintingId();
-        String description = request.getDescription();
-
-        Painting painting = paintingRepository.findById(paintingId).orElse(null);
-        if (painting == null) return ResponseEntity.badRequest().body("Invalid paintingId");
-
-        // 메시지 저장
-        Message aiMessage = Message.builder()
-                .sender(SenderType.ASSISTANT)
-                .content(description)
-                .painting(painting)
-                .build();
-        messageRepository.save(aiMessage);
-
-        // userId 정보를 어떻게 알 것인가?
-        // painting 객체와 연결된 user가 존재한다면 그 userId로 채팅방 지정
-        Long userId = painting.getUser().getUsersId(); // 예시: Painting에 getUser()가 있다고 가정
-        if (userId == null) return ResponseEntity.badRequest().body("User not found for painting");
-
-        // 메시지 전송
-        messagingTemplate.convertAndSend("/room/user-" + userId, request);
-
-        return ResponseEntity.ok("Message sent");
-    }
-
+//
+//    @PostMapping("/chat/send-ai-message")
+//    public ResponseEntity<String> sendAiMessage(@RequestBody ObjectDescriptionRequest request) {
+//        /*Long paintingId = request.getPaintingId();*/
+//        Long paintingId = request.geObjectId();
+//        String description = request.getDescription();
+//
+//        Painting painting = paintingRepository.findById(paintingId).orElse(null);
+//        if (painting == null) return ResponseEntity.badRequest().body("Invalid paintingId");
+//
+//        // 메시지 저장
+//        Message aiMessage = Message.builder()
+//                .sender(SenderType.ASSISTANT)
+//                .content(description)
+//                .painting(painting)
+//                .build();
+//        messageRepository.save(aiMessage);
+//
+//        // painting 객체와 연결된 user 정보 사용
+//        Long userId = painting.getUser().getUsersId();
+//        if (userId == null) return ResponseEntity.badRequest().body("User not found for painting");
+//
+//        // 메시지 전송
+//        messagingTemplate.convertAndSend("/room/user-" + userId, request);
+//
+//        return ResponseEntity.ok("Message sent");
+//    }
 }

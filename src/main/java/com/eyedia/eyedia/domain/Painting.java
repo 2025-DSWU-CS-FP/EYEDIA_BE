@@ -8,41 +8,52 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.ArrayList;
 import java.util.List;
-
 @Entity
 @Getter
+@Setter
 @DynamicUpdate
 @DynamicInsert
 @Builder
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @AllArgsConstructor
 @Table(name = "paintings")
 public class Painting extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long paintingsId;
+    @Column(name = "painting_id")
+    private Long paintingId;
 
+    @Version
+    @Column(name = "version")
+    private Long version; // 낙관적 락 버전 필드
+
+    @Column(name = "description", columnDefinition = "TEXT")
+    private String description;
+
+    @Column(name = "image_url")
     private String imageUrl;
+
+    @Column(name = "title")
     private String title;
+
+    @Column(name = "artist")
     private String artist;
+
     private String background;
+
+    @Column(name = "object_id")
+    private String objectId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exhibitions_id")
     private Exhibition exhibition;
 
-    @OneToMany(mappedBy = "painting", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "painting", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<Message> messages = new ArrayList<>();
 
-    @OneToMany(mappedBy = "painting", cascade = CascadeType.ALL)
-    private List<Object> objects = new ArrayList<>();
-    // 유저 임시로 연결
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "users_id")
     private User user;
-
-    private Long aiPaintingId;
-
-
 }

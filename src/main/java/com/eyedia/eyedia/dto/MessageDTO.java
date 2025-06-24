@@ -20,7 +20,7 @@ public class MessageDTO {
     @Builder
     @Getter
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
-    @Data
+
     public static class ModelResponseDTO {
 
         @JsonProperty("full_image_id")

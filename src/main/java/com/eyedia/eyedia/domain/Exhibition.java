@@ -41,6 +41,8 @@ public class Exhibition extends BaseEntity {
     private User user;
 
     @OneToMany(mappedBy = "exhibition", cascade = CascadeType.ALL)
+    @Builder.Default
+
     private List<Painting> paintings = new ArrayList<>();
 }
 

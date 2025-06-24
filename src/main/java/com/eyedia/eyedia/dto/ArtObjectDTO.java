@@ -1,8 +1,9 @@
 package com.eyedia.eyedia.dto;
 
+import com.eyedia.eyedia.domain.enums.SenderType;
 import lombok.*;
 
-public class ObjectDTO {
+public class ArtObjectDTO {
 
     @Getter
     public static class ObjectRequestDTO {
@@ -32,5 +33,7 @@ public class ObjectDTO {
         private Long paintingId;
         private Long objectId;
         private String description;
+        private SenderType sendingType;
+
     }
 }

@@ -1,5 +1,8 @@
 package com.eyedia.eyedia.service;
 
+
+import java.util.stream.Collectors;
+
 import com.eyedia.eyedia.config.SecurityUtil;
 import com.eyedia.eyedia.domain.Painting;
 import com.eyedia.eyedia.domain.User;
@@ -19,36 +22,39 @@ public class UserFacingService {
     private final MessageRepository messageRepository;
     private final UserRepository userRepository;
 
-    public PaintingConfirmResponse confirmPainting(Long aiPaintingId) {
+    public PaintingConfirmResponse confirmPainting(Long paintingId) {
         Long userId = SecurityUtil.getCurrentUserId();
-        // TODO: error응답 수정
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
-        // 채팅방(PAINTING) 생성 및 사용자 연결
-        Painting paintingRoom = Painting
-                .builder()
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        // 채팅방 생성 및 사용자 연결
+        Painting paintingRoom = Painting.builder()
                 .user(user)
-                .aiPaintingId(aiPaintingId)
+                .paintingId(paintingId)
                 .build();
-        // TODO: 배경정보, 작가정보 가져오도록 수정
+
         Painting response = paintingRepository.save(paintingRoom);
 
         return PaintingConfirmResponse.builder()
-                .chatRoomId(response.getPaintingsId())
-                .aiPaintingId(response.getAiPaintingId())
+                .chatRoomId(response.getPaintingId())
+                .paintingId(response.getPaintingId())
                 .confirmed(true)
                 .message("채팅방을 시작합니다.")
                 .build();
     }
 
-    public List<MessageDTO.ChatMessageDTO> getChatMessagesByPaintingId(Long paintingId) {
-        return messageRepository.findByPainting_PaintingsIdOrderByCreatedAtAsc(paintingId).stream()
-                .map(message -> MessageDTO.ChatMessageDTO.builder()
-                        .sender(message.getSender().name())
-                        .content(message.getContent())
-                        .paintingId(paintingId)
-                        .timestamp(message.getCreatedAt().toString())
-                        .build())
-                .toList();
-    }
 
+    public List<MessageDTO.ChatMessageDTO> getChatMessagesByPaintingId(Long paintingId) {
+//        return messageRepository.findByPainting_PaintingIdOrderByCreatedAtAsc(paintingId).stream()
+//                .map(message -> MessageDTO.ChatMessageDTO.builder()
+//                        .sender(message.getSender().name())
+//                        .content(message.getContent())
+//                        .paintingId(paintingId)
+//                        .timestamp(message.getCreatedAt().toString())
+//                        .build())
+//                .toList();
+        return List.of();
+    }
 }
+

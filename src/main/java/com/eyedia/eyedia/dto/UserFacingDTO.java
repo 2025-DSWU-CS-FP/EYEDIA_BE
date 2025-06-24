@@ -9,7 +9,7 @@ public class UserFacingDTO {
     @AllArgsConstructor
     public static class PaintingConfirmResponse {
         private Long chatRoomId;
-        private Long aiPaintingId;
+        private Long paintingId;
         private boolean confirmed;
         private String message;
     }

@@ -44,6 +44,7 @@ public class User extends BaseEntity {
     private List<Exhibition> exhibitions = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<Painting> paintings = new ArrayList<>();
 
 }
