@@ -49,6 +49,9 @@ jobs:
           RDS_URL : ${{ secrets.RDS_URL }}
           JWT_SECRET : ${{ secrets.JWT_SECRET }}
           JWT_EXPIRATION : ${{ secrets.JWT_EXPIRATION }}
+          S3_REGION : ${{ secrets.S3_REGION }}
+          S3_ACCESSKEY : ${{ secrets.S3_ACCESSKEY }}
+          S3_SECRETKEY : ${{ secrets.S3_SECRETKEY }}
 
       # Docker Build하고 DockerHub에 Push
       - name: Docker Build & Push to DockerHub

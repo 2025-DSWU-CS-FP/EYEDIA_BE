@@ -1,0 +1,11 @@
+cloud:
+  aws:
+    s3:
+      bucket: s3-eyedia
+    region:
+      static: ${S3_REGION}
+    stack:
+      auto:false
+  credentials:
+    accessKey: ${S3_ACCESSKEY}
+    secretKey: ${S3_SECRETKEY}
