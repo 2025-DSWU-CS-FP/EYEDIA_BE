@@ -8,4 +8,5 @@ spring:
         - dev
     include:
       - jwt
+      - s3
 #      - oauth
