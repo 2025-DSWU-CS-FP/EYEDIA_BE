@@ -1,12 +1,14 @@
 package com.eyedia.eyedia.repository;
 
-import com.eyedia.eyedia.domain.Painting;
+import com.eyedia.eyedia.domain.ArtObject;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface PaintingRepository extends JpaRepository<Painting, Long> {
-    Optional<Painting> findByPaintingId(Long paintingId);
+public interface ArtObjectRepository extends JpaRepository<ArtObject, Long> {
+
+    Optional<ArtObject> findByObjectId(String objectId);
+
 }

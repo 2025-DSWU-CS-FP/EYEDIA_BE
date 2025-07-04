@@ -1,8 +1,9 @@
 package com.eyedia.eyedia.dto;
 
-import com.eyedia.eyedia.domain.enums.SenderType;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
+import lombok.extern.jackson.Jacksonized;
 
 public class AiToBackendDTO {
 
@@ -13,8 +14,11 @@ public class AiToBackendDTO {
     public static class MatchingCandidateRequest {
         @Schema(description = "그림 후보 ID", example = "12")
         private Long candidateId;
-    }
 
+        public Long getPaintingId() {
+            return candidateId;
+        }
+    }
 
     @Getter
     @Builder
@@ -26,7 +30,6 @@ public class AiToBackendDTO {
         private String imageUrl;
     }
 
-
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
@@ -36,26 +39,39 @@ public class AiToBackendDTO {
     }
 
     @Getter
-    @Builder
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class ObjectDescriptionRequest {
-        @Schema(description = "그림 ID", example = "1")
-        private Long paintingId;
-
-        @Schema(description = "객체 ID", example = "10")
-        private Long objectId;
-
-        @Schema(description = "AI가 생성한 설명", example = "오른쪽 아래에 위치한 곡선형 주전자입니다.")
-        private String description;
-        private SenderType sendingType;
-    }
-
-    @Getter
     @AllArgsConstructor
     @NoArgsConstructor
     public static class RecaptureResponse {
         @Schema(description = "재촬영 요청 여부", example = "true")
         private boolean isSuccess;
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    @Jacksonized
+    @ToString
+    @Schema(description = "AI가 객체 설명을 전달할 때 사용하는 요청 DTO")
+    public static class ObjectDescriptionRequest {
+
+        @JsonProperty("objectId")
+        private String objectId;
+
+        @JsonProperty("description")
+        private String description;
+
+        @JsonProperty("imageurl")
+        private String imageurl;
+
+        @JsonProperty("title")
+        private String title;
+
+        @JsonProperty("artist")
+        private String artist;
+
+        @JsonProperty("paintingId")
+        private Long paintingId;
     }
 }
