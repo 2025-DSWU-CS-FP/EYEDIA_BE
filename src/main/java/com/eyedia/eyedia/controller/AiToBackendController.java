@@ -32,8 +32,7 @@ public class AiToBackendController {
     )
     @ApiResponse(responseCode = "200", description = "설명이 저장되었습니다.")
     @PostMapping("/object-description")
-    public ResponseEntity<Void> receiveObjectDescription(
-            @RequestBody AiToBackendDTO.ObjectDescriptionRequest request) {
+    public ResponseEntity<Void> receiveObjectDescription(@RequestBody AiToBackendDTO.ObjectDescriptionRequest request) {
 
         try {
             Long paintingId = request.getPaintingId();

@@ -13,6 +13,9 @@ services:
       RDS_USERNAME: ${RDS_USERNAME}
       RDS_PASSWORD: ${RDS_PASSWORD}
       RDS_URL: ${RDS_URL}
+      S3_REGION: ${S3_REGION}
+      S3_ACCESSKEY: ${S3_ACCESSKEY}
+      S3_SECRETKEY: ${S3_SECRETKEY}
     networks:
       - my_network
 
