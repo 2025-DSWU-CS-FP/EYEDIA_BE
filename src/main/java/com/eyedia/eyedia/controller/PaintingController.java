@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/paintings")
 @RequiredArgsConstructor
 @Tag(name = "User Facing Controller", description = "사용자가 그림 정보를 확인할 수 있는 API")
-public class UserFacingController {
+public class PaintingController {
 
     private final UserFacingService userFacingService;
 
