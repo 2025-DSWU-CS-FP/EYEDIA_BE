@@ -32,7 +32,7 @@ public class PaintingController {
 
         String keyName = s3Manager.generatePaintingKeyName(exhibition, title);
         String imageUrl = s3Manager.uploadFile(keyName, image);
-        log.info("s3 url : {}", imageUrl);
+
         return ApiResponse.of(SuccessStatus._OK,imageUrl);
     }
 
