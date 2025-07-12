@@ -36,6 +36,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                                 "/v3/api-docs/**",
                                 "/api-docs/**",
                                 "/api/v1/ai/**",
+                                "/api/v1/paintings/**",
                                 "/chat/send-ai-message",
                                 "/ws-stomp",
                                 "/",
