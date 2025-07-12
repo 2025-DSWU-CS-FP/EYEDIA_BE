@@ -1,26 +1,29 @@
 package com.eyedia.eyedia.service;
 
 
-import java.util.stream.Collectors;
-
 import com.eyedia.eyedia.config.SecurityUtil;
+import com.eyedia.eyedia.domain.Exhibition;
 import com.eyedia.eyedia.domain.Painting;
 import com.eyedia.eyedia.domain.User;
 import com.eyedia.eyedia.dto.MessageDTO;
+import com.eyedia.eyedia.dto.PaintingMetadataRequest;
 import com.eyedia.eyedia.dto.UserFacingDTO.PaintingConfirmResponse;
+import com.eyedia.eyedia.repository.ExhibitionRepository;
 import com.eyedia.eyedia.repository.MessageRepository;
 import com.eyedia.eyedia.repository.PaintingRepository;
 import com.eyedia.eyedia.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class UserFacingService {
+public class PaintingService {
     private final PaintingRepository paintingRepository;
     private final MessageRepository messageRepository;
     private final UserRepository userRepository;
+    private final ExhibitionRepository exhibitionRepository;
 
     public PaintingConfirmResponse confirmPainting(Long paintingId) {
         Long userId = SecurityUtil.getCurrentUserId();
@@ -56,5 +59,24 @@ public class UserFacingService {
 //                .toList();
         return List.of();
     }
-}
 
+    public void saveMetadata(PaintingMetadataRequest request) {
+        Exhibition exhibition = exhibitionRepository.findByTitle(request.getExhibition())
+                .orElseGet(() -> exhibitionRepository.save(
+                        Exhibition.builder()
+                                .title(request.getExhibition())
+                                .build()
+                ));
+
+        Painting painting = Painting.builder()
+                .objectId(request.getObjectId())
+                .title(request.getTitle())
+                .artist(request.getArtist())
+                .description(request.getDescription())
+                .imageUrl(request.getImageUrl())
+                .exhibition(exhibition)
+                .build();
+
+        paintingRepository.save(painting);
+    }
+}
