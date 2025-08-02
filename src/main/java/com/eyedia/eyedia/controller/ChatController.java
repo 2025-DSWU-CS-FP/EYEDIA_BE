@@ -5,6 +5,7 @@ import com.eyedia.eyedia.domain.Painting;
 import com.eyedia.eyedia.domain.enums.SenderType;
 import com.eyedia.eyedia.dto.AiToBackendDTO;
 import com.eyedia.eyedia.dto.MessageDTO;
+import com.eyedia.eyedia.dto.PaintingMetadataRequest;
 import com.eyedia.eyedia.repository.MessageRepository;
 import com.eyedia.eyedia.repository.PaintingRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,11 +15,14 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 public class ChatController {
 
@@ -27,6 +31,16 @@ public class ChatController {
     private static final String MODEL_API_URL = "http://localhost:8000/api/llm/answer"; // FastAPI 실제 API 주소
     private final PaintingRepository paintingRepository;
     private final MessageRepository messageRepository;
+
+    @PostMapping("/paintings-push")
+    public PaintingMetadataRequest pushPaintingDetected(@RequestBody PaintingMetadataRequest request,
+    @Header("simpSessionAttributes") Map<String, Object> sessionAttributes) {
+        Long userId = (Long) sessionAttributes.get("userId");
+
+        messagingTemplate.convertAndSend("/room/user-" + userId, request);
+
+        return request;
+    }
 
     @MessageMapping("/chat.sendMessage")
     public void sendMessage(@Payload MessageDTO.ChatMessageDTO message,
