@@ -40,7 +40,8 @@ public class SecurityConfig implements WebMvcConfigurer {
                                 "/chat/send-ai-message",
                                 "/ws-stomp",
                                 "/",
-                                "/health-check"
+                                "/health-check",
+                                "/paintings-push"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
