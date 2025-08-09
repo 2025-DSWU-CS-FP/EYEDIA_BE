@@ -16,7 +16,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.enableSimpleBroker("/room");
+        registry.enableSimpleBroker("/room", "/topic", "/queue"); // 필요 prefix 추가 가능
         registry.setApplicationDestinationPrefixes("/app");
     }
 
@@ -24,6 +24,14 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws-stomp")
                 .addInterceptors(authHandshakeInterceptor)
-                .setAllowedOriginPatterns("*");
+                .setAllowedOriginPatterns(
+                        "http://localhost:*",
+                        "http://127.0.0.1:*",
+                        "http://54.180.228.18:*",
+                        "http://localhost:3000",
+                        "http://localhost:8000",
+                        "https://eyedia.netlify.app"
+                )
+                .withSockJS(); // ★ SockJS 켜기 → /info, /xhr_* 경로 자동 제공
     }
 }

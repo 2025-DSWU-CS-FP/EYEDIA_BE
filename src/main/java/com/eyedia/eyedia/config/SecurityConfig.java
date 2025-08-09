@@ -4,6 +4,7 @@ import com.eyedia.eyedia.config.jwt.JwtAuthenticationFilter;
 import com.eyedia.eyedia.config.jwt.JwtProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
@@ -24,10 +25,19 @@ public class SecurityConfig implements WebMvcConfigurer {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .cors(Customizer.withDefaults())
-                .csrf(csrf -> csrf.disable())
+                .csrf(csrf -> csrf
+                        // SockJS 핸드셰이크/전송 경로는 CSRF 제외
+                        .ignoringRequestMatchers("/ws-stomp/**")
+                        .disable()
+                )
                 .formLogin(form -> form.disable())
                 .httpBasic(basic -> basic.disable())
                 .authorizeHttpRequests(auth -> auth
+                        // SockJS 하위 경로 전부 허용 (/info, /xhr_*)
+                        .requestMatchers("/ws-stomp/**").permitAll()
+                        // CORS 프리플라이트
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        // 공개 엔드포인트
                         .requestMatchers(
                                 "/api/v1/auth/signup",
                                 "/api/v1/auth/login",
