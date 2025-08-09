@@ -7,52 +7,52 @@ import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.messaging.support.MessageHeaderAccessor;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class StompAuthChannelInterceptor implements ChannelInterceptor {
 
     @Override
     public Message<?> preSend(@NonNull Message<?> message, @NonNull MessageChannel channel) {
-        // 메시지에서 STOMP 헤더 접근자 꺼내기 (권장 방식)
-        StompHeaderAccessor accessor =
-                MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
+        StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
+        if (accessor == null || accessor.getCommand() == null) return message;
 
-        if (accessor == null) {
-            return message; // STOMP 메시지가 아니면 패스
-        }
-
-        StompCommand cmd = accessor.getCommand();
-        if (cmd == null) {
-            return message;
-        }
-
-        if (StompCommand.CONNECT.equals(cmd)) {
-            // 프런트에서 보낸 CONNECT 헤더 읽기
+        if (StompCommand.CONNECT.equals(accessor.getCommand())) {
+            // 1) CONNECT 네이티브 헤더에서 토큰 꺼내기(여러 키 대응)
             String auth = firstNonNull(
                     accessor.getFirstNativeHeader("Authorization"),
                     accessor.getFirstNativeHeader("authorization"),
                     accessor.getFirstNativeHeader("access_token")
             );
 
-            if (auth != null && auth.startsWith("Bearer ")) {
-                auth = auth.substring(7);
+            // 2) 공백/따옴표 제거
+            if (auth != null) auth = auth.trim().replaceAll("^\"|\"$", "");
+
+            // 3) Bearer 접두어(대소문자 무시) 제거
+            if (auth != null && auth.toLowerCase().startsWith("bearer ")) {
+                auth = auth.substring(7).trim();
             }
 
+            // 4) 토큰 누락 처리
             if (auth == null || auth.isBlank()) {
-                throw new org.springframework.security.access.AccessDeniedException("Missing token");
+                throw new AccessDeniedException("Missing Authorization Bearer token in CONNECT");
             }
 
-            Long userId = JwtUtil.getUserIdFromToken(auth); // 검증 실패 시 예외
-            if (userId == null) {
-                throw new org.springframework.security.access.AccessDeniedException("Invalid token");
-            }
+            // 5) 검증 및 Principal 세팅
+            try {
+                Long userId = JwtUtil.getUserIdFromToken(auth); // 프로젝트의 구현체 사용
+                if (userId == null) throw new AccessDeniedException("Invalid token (null userId)");
 
-            // 필요 시 Principal 심기
-            var principal = new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(
-                    userId, null, java.util.List.of()
-            );
-            accessor.setUser(principal);
+                // principal.getName() 사용을 위해 문자열로 저장
+                var principal = new UsernamePasswordAuthenticationToken(String.valueOf(userId), null, List.of());
+                accessor.setUser(principal);
+            } catch (Exception e) {
+                throw new AccessDeniedException("JWT validation failed: " + e.getMessage());
+            }
         }
 
         return message;
