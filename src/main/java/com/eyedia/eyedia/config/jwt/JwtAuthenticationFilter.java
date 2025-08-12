@@ -41,5 +41,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
     }
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getRequestURI();
+        // /ws-stomp 경로는 JWT 필터에서 제외
+        return !path.startsWith("/ws-stomp");
+    }
 }
 

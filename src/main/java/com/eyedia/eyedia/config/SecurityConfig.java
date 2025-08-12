@@ -38,7 +38,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                                 "/api/v1/ai/**",
                                 "/api/v1/paintings/**",
                                 "/chat/send-ai-message",
-                                "/ws-stomp",
+                                "/ws-stomp", "/ws-stomp/**",
                                 "/",
                                 "/health-check",
                                 "/paintings-push"
@@ -66,4 +66,5 @@ public class SecurityConfig implements WebMvcConfigurer {
                 .allowCredentials(true)
                 .maxAge(3600);
     }
+
 }

@@ -14,7 +14,6 @@ import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,6 +30,16 @@ public class ChatController {
     private static final String MODEL_API_URL = "http://localhost:8000/api/llm/answer"; // FastAPI 실제 API 주소
     private final PaintingRepository paintingRepository;
     private final MessageRepository messageRepository;
+/**
+    //@MessageMapping("/echo/{roomId}")
+    //@SendTo("/room/{roomId}")
+    public void echo(@Payload String message) {
+        System.out.println("Echo received: " + message);
+        // 구독 중인 모든 /room에 메시지 전송
+        messagingTemplate.convertAndSend("/room", "echo: " + message);
+    }
+*/
+
 
     @PostMapping("/paintings-push")
     public PaintingMetadataRequest pushPaintingDetected(@RequestBody PaintingMetadataRequest request,
