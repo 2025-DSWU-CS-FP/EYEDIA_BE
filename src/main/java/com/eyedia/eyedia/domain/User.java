@@ -40,11 +40,18 @@ public class User extends BaseEntity {
 
     private String currentLocation;
 
+    @Builder.Default
+    private boolean isFirstLogin = true;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Exhibition> exhibitions = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @Builder.Default
     private List<Painting> paintings = new ArrayList<>();
+
+    public void setIsFirstLogin(boolean isFirstLogin) {
+        this.isFirstLogin = isFirstLogin;
+    }
 
 }
