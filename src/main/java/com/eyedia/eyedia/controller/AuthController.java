@@ -1,11 +1,14 @@
 package com.eyedia.eyedia.controller;
-import java.util.Map;
+
 import com.eyedia.eyedia.dto.UserLoginDTO;
 import com.eyedia.eyedia.dto.UserSignupDTO;
 import com.eyedia.eyedia.service.impl.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -25,8 +28,8 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserLoginDTO loginDTO) {
         try {
-            String token = authService.login(loginDTO);
-            return ResponseEntity.ok(Map.of("accessToken", token));
+            var responseDTO = authService.login(loginDTO);
+            return ResponseEntity.ok(responseDTO);
         } catch (RuntimeException e) {
             return ResponseEntity.status(401).body("로그인 실패: " + e.getMessage());
         }
