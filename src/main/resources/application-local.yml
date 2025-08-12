@@ -26,3 +26,22 @@ spring:
         show_sql: true
         format_sql: true
     defer-datasource-initialization: true
+logging:
+  level:
+    root: info
+
+    # STOMP/메시징
+    org.springframework.messaging: DEBUG
+    org.springframework.messaging.simp: DEBUG
+    org.springframework.messaging.support: DEBUG
+    org.springframework.security.messaging: DEBUG
+
+    # 웹소켓/핸드셰이크
+    org.springframework.web.socket: DEBUG
+    org.springframework.web.socket.sockjs: DEBUG
+
+    # 시큐리티 전반
+    org.springframework.security: DEBUG
+
+    # 우리 앱 패키지
+    com.eyedia: DEBUG
