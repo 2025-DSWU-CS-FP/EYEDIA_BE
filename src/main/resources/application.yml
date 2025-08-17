@@ -10,3 +10,8 @@ spring:
       - jwt
       - s3
 #      - oauth
+logging:
+  level:
+    org:
+      springframework:
+        security=DEBUG:
