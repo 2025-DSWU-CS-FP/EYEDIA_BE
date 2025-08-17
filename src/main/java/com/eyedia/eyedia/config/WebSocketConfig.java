@@ -47,7 +47,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                         "http://localhost:3000",
                         "http://localhost:5173",
                         "https://eyedia.site",
-                        "https://eyedia.netlify.app"
+                        "https://eyedia.netlify.app",
+                        "http://3.34.240.201:8000"
                 )
                 .addInterceptors(authHandshakeInterceptor);
     }
