@@ -25,7 +25,7 @@ public class PaintingService {
     private final UserRepository userRepository;
     private final ExhibitionRepository exhibitionRepository;
 
-    public PaintingConfirmResponse confirmPainting(Long paintingId) {
+    public PaintingConfirmResponse confirmPainting(Long artId) {
         Long userId = SecurityUtil.getCurrentUserId();
 
         User user = userRepository.findById(userId)
@@ -34,7 +34,7 @@ public class PaintingService {
         // 채팅방 생성 및 사용자 연결
         Painting paintingRoom = Painting.builder()
                 .user(user)
-                .paintingId(paintingId)
+                .artId(artId)
                 .build();
 
         Painting response = paintingRepository.save(paintingRoom);
@@ -43,6 +43,7 @@ public class PaintingService {
                 .chatRoomId(response.getPaintingId())
                 .paintingId(response.getPaintingId())
                 .confirmed(true)
+                .artId(response.getArtId())
                 .message("채팅방을 시작합니다.")
                 .build();
     }

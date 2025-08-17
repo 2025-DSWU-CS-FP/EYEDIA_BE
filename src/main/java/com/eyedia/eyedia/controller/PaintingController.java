@@ -24,6 +24,12 @@ public class PaintingController {
     private final PaintingService paintingService;
     private final S3Manager s3Manager;
 
+
+
+    /**
+     * Error: 모델에 문제가 생겨 사용 불가
+     *
+     * */
     @PostMapping("/upload")
     @Operation(summary = "이미지 업로드", description = "모델 서버가 전송한 그림 이미지를 S3에 업로드하고 이미지 URL을 반환합니다.")
     public ApiResponse<String> uploadImage(
@@ -44,11 +50,11 @@ public class PaintingController {
         return ApiResponse.of(SuccessStatus._OK,null);
     }
 
-    @Operation(summary = "그림 확인", description = "사용자가 그림을 확인하고 채팅을 시작여부를 선택합니다.")
-    @PostMapping("/{paintingId}/confirm")
-    public ResponseEntity<PaintingConfirmResponse> confirmPainting(@PathVariable Long paintingId) {
+    @Operation(summary = "채팅방 생성", description = "사용자가 그림을 확인하고 채팅을 시작여부를 선택합니다.")
+    @PostMapping("/{artId}/confirm")
+    public ResponseEntity<PaintingConfirmResponse> confirmPainting(@PathVariable Long artId) {
         // confirm 후 채팅 시작
-        return ResponseEntity.ok(paintingService.confirmPainting(paintingId));
+        return ResponseEntity.ok(paintingService.confirmPainting(artId));
     }
 
     @Operation(summary = "그림 설명 조회", description = "DB에서 그림에 대한 전체적인 설명을 조회합니다.")

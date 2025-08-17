@@ -5,7 +5,6 @@ import com.eyedia.eyedia.domain.Painting;
 import com.eyedia.eyedia.domain.enums.SenderType;
 import com.eyedia.eyedia.dto.AiToBackendDTO;
 import com.eyedia.eyedia.dto.MessageDTO;
-import com.eyedia.eyedia.dto.PaintingMetadataRequest;
 import com.eyedia.eyedia.repository.MessageRepository;
 import com.eyedia.eyedia.repository.PaintingRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,8 +13,6 @@ import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
@@ -27,29 +24,20 @@ public class ChatController {
 
     private final SimpMessagingTemplate messagingTemplate;
     private final RestTemplate restTemplate;
-    private static final String MODEL_API_URL = "http://localhost:8000/api/llm/answer"; // FastAPI 실제 API 주소
+    private static final String MODEL_API_URL = "http://3.34.240.201:8000";
     private final PaintingRepository paintingRepository;
     private final MessageRepository messageRepository;
-/**
-    //@MessageMapping("/echo/{roomId}")
-    //@SendTo("/room/{roomId}")
-    public void echo(@Payload String message) {
-        System.out.println("Echo received: " + message);
-        // 구독 중인 모든 /room에 메시지 전송
-        messagingTemplate.convertAndSend("/room", "echo: " + message);
-    }
-*/
 
-
-    @PostMapping("/paintings-push")
-    public PaintingMetadataRequest pushPaintingDetected(@RequestBody PaintingMetadataRequest request,
-    @Header("simpSessionAttributes") Map<String, Object> sessionAttributes) {
-        Long userId = (Long) sessionAttributes.get("userId");
-
-        messagingTemplate.convertAndSend("/room/user-" + userId, request);
-
-        return request;
-    }
+//    @PostMapping("/paintings-push")
+//    public PaintingMetadataRequest pushPaintingDetected(@RequestBody PaintingMetadataRequest request,
+//    @Header("simpSessionAttributes") Map<String, Object> sessionAttributes) {
+//        Long userId = (Long) sessionAttributes.get("userId");
+//
+//        messagingTemplate.convertAndSend("/room/user-" + userId, request);
+//        //messagingTemplate.convertAndSendToUserprincipal.getName(), "/queue/events", payload);
+//
+//        return request;
+//    }
 
     @MessageMapping("/chat.sendMessage")
     public void sendMessage(@Payload MessageDTO.ChatMessageDTO message,
@@ -88,7 +76,7 @@ public class ChatController {
             );
 
             ResponseEntity<MessageDTO.ModelResponseDTO> response = restTemplate.postForEntity(
-                    MODEL_API_URL, payload, MessageDTO.ModelResponseDTO.class
+                    MODEL_API_URL+"/generate-description", payload, MessageDTO.ModelResponseDTO.class
             );
 
             MessageDTO.ModelResponseDTO responseBody = response.getBody();
@@ -119,31 +107,4 @@ public class ChatController {
 
         messagingTemplate.convertAndSend("/room/user-" + userId, aiMessageDto);
     }
-//
-//    @PostMapping("/chat/send-ai-message")
-//    public ResponseEntity<String> sendAiMessage(@RequestBody ObjectDescriptionRequest request) {
-//        /*Long paintingId = request.getPaintingId();*/
-//        Long paintingId = request.geObjectId();
-//        String description = request.getDescription();
-//
-//        Painting painting = paintingRepository.findById(paintingId).orElse(null);
-//        if (painting == null) return ResponseEntity.badRequest().body("Invalid paintingId");
-//
-//        // 메시지 저장
-//        Message aiMessage = Message.builder()
-//                .sender(SenderType.ASSISTANT)
-//                .content(description)
-//                .painting(painting)
-//                .build();
-//        messageRepository.save(aiMessage);
-//
-//        // painting 객체와 연결된 user 정보 사용
-//        Long userId = painting.getUser().getUsersId();
-//        if (userId == null) return ResponseEntity.badRequest().body("User not found for painting");
-//
-//        // 메시지 전송
-//        messagingTemplate.convertAndSend("/room/user-" + userId, request);
-//
-//        return ResponseEntity.ok("Message sent");
-//    }
 }
