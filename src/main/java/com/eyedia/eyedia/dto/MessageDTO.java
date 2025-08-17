@@ -5,6 +5,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 public class MessageDTO {
+    @Builder
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class ChatImageResponseDTO {
+        private String url;
+        private Long artId;
+    }
 
     @Builder
     @Getter
