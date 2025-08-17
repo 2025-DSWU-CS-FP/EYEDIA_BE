@@ -12,6 +12,7 @@ public class UserFacingDTO {
         private Long paintingId;
         private boolean confirmed;
         private String message;
+        private Long artId;
     }
 
     @Getter
