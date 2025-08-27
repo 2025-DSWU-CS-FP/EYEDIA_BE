@@ -41,7 +41,7 @@ public class ExhibitionController {
         return ApiResponse.onSuccess(exhibitionService.getPopularDetailPage(exhibitionId));
     }
     // 글자 단위 검색
-    @GetMapping("/exhibitions/suggest")
+    @GetMapping("/suggest")
     public ApiResponse<List<ExhibitionDTO.ExhibitionSimpleResponseDTO>> suggest(
             @RequestParam String q,
             @RequestParam(defaultValue = "10") int limit
