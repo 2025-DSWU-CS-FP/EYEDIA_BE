@@ -2,6 +2,8 @@ package com.eyedia.eyedia.domain;
 
 import com.eyedia.eyedia.domain.common.BaseEntity;
 import com.eyedia.eyedia.domain.enums.Gender;
+import com.eyedia.eyedia.domain.mapping.Bookmark;
+import com.eyedia.eyedia.domain.mapping.Visit;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
@@ -49,6 +51,13 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @Builder.Default
     private List<Painting> paintings = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @Builder.Default
+    private List<Bookmark> bookmarks = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Visit> visits = new ArrayList<>();
 
     public void setIsFirstLogin(boolean isFirstLogin) {
         this.isFirstLogin = isFirstLogin;

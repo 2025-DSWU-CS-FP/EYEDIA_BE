@@ -3,6 +3,7 @@ package com.eyedia.eyedia.domain;
 import com.eyedia.eyedia.domain.common.BaseEntity;
 import com.eyedia.eyedia.domain.enums.ExhibitionCategory;
 import com.eyedia.eyedia.domain.mapping.Bookmark;
+import com.eyedia.eyedia.domain.mapping.Visit;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
@@ -57,5 +58,8 @@ public class Exhibition extends BaseEntity {
     @OneToMany(mappedBy = "exhibition", cascade = CascadeType.ALL)
     @Builder.Default
     private List<Bookmark> bookmarks = new ArrayList<>();
+
+    @OneToMany(mappedBy = "exhibition", cascade = CascadeType.ALL)
+    private List<Visit> visits = new ArrayList<>();
 }
 
