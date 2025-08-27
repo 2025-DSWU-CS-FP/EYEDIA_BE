@@ -1,10 +1,13 @@
 package com.eyedia.eyedia.domain;
 
 import com.eyedia.eyedia.domain.common.BaseEntity;
+import com.eyedia.eyedia.domain.enums.ExhibitionCategory;
+import com.eyedia.eyedia.domain.mapping.Bookmark;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +26,8 @@ public class Exhibition extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long exhibitionsId;
 
-    private String title;
-    private String gallery;
+    private String title; // 전시 이름 ex) 요시고 사진전
+    private String gallery; // 장소 ex) 서울시립미술관 서소문본관
 
     @Column(length = 500)
     private String description;
@@ -36,13 +39,23 @@ public class Exhibition extends BaseEntity {
     private Integer visitCount;
     private String artist;
 
+    @Enumerated(EnumType.STRING)
+    private ExhibitionCategory category;
+
+    private String location;
+
+    private Integer artCount;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "users_id")
     private User user;
 
     @OneToMany(mappedBy = "exhibition", cascade = CascadeType.ALL)
     @Builder.Default
-
     private List<Painting> paintings = new ArrayList<>();
+
+    @OneToMany(mappedBy = "exhibition", cascade = CascadeType.ALL)
+    @Builder.Default
+    private List<Bookmark> bookmarks = new ArrayList<>();
 }
 
