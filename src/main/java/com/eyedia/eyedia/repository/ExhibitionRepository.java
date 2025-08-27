@@ -27,7 +27,6 @@ public interface ExhibitionRepository extends JpaRepository<Exhibition, Long> {
     /**
      * 전시별 북마크 수를 집계해서 인기순(북마크 카운트 desc)으로 정렬
      * - LEFT JOIN: 북마크 0개 전시도 포함 (원치 않으면 INNER JOIN으로 변경)
-     * - tie-breaker로 최근 전시/조회수 등을 추가해도 됨
      */
     @Query(
             value = """
@@ -43,5 +42,6 @@ public interface ExhibitionRepository extends JpaRepository<Exhibition, Long> {
                 """
     )
     Page<Exhibition> findPopular(Pageable pageable);
+    List<Exhibition> findByTitleStartingWith(String q, Pageable pageable);
 
 }

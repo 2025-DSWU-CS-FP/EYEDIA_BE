@@ -45,6 +45,11 @@ public class ExhibitionQueryService {
         // TODO: 예외 처리: 없는 아이디 조회 등등
     }
     // 조회
+    public List<ExhibitionDTO.ExhibitionSimpleResponseDTO> suggest(String q, int limit) {
+        var list = popularityRepository.findByTitleStartingWith(q.trim(), PageRequest.of(0, limit));
+        return list.stream().map(this::toSimpleDto).toList();
+    }
+
 
 
     // --- Mapper ---
