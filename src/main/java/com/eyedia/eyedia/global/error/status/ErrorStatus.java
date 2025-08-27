@@ -24,7 +24,13 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // 파일/입출력 관련
     FILE_UPLOAD_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "FILE500", "파일 업로드 중 오류가 발생했습니다."),
-    FILE_NOT_FOUND(HttpStatus.NOT_FOUND, "FILE404", "요청한 파일을 찾을 수 없습니다.");
+    FILE_NOT_FOUND(HttpStatus.NOT_FOUND, "FILE404", "요청한 파일을 찾을 수 없습니다."),
+
+    // 전시 관련
+    EXHIBITION_NOT_FOUND(HttpStatus.NOT_FOUND, "EXHIBITION404", "전시를 찾을 수 없습니다."),
+    INVALID_EXHIBITION_ID(HttpStatus.BAD_REQUEST, "EXHIBITION400", "잘못된 전시 ID입니다."),
+    VISIT_RECORD_NOT_FOUND(HttpStatus.BAD_REQUEST, "EXHIBITION402", "사용자가 방문한 적 없습니다.");
+
 
 
     private final HttpStatus httpStatus;
