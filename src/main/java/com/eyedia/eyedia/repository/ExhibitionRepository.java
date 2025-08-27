@@ -44,4 +44,9 @@ public interface ExhibitionRepository extends JpaRepository<Exhibition, Long> {
     Page<Exhibition> findPopular(Pageable pageable);
     List<Exhibition> findByTitleStartingWith(String q, Pageable pageable);
 
+    // 여러 필드 시작일치 동시 검색
+    List<Exhibition> findByTitleContainingIgnoreCaseOrGalleryContainingIgnoreCase(
+            String titlePart, String galleryPart, Pageable pageable
+    );
+
 }

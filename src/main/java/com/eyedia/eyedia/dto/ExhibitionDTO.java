@@ -24,6 +24,7 @@ public class ExhibitionDTO {
         String exhibitionTitle;
         String exhibitionImage;
         Integer artCount;
+        String gallery;
 
     }
     /**

@@ -14,7 +14,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class ExhibitionQueryService {
 
     private final ExhibitionRepository popularityRepository;
@@ -46,9 +46,16 @@ public class ExhibitionQueryService {
     }
     // 조회
     public List<ExhibitionDTO.ExhibitionSimpleResponseDTO> suggest(String q, int limit) {
-        var list = popularityRepository.findByTitleStartingWith(q.trim(), PageRequest.of(0, limit));
+        q = q.trim();
+        if (q.isEmpty()) return List.of();
+
+        var list = popularityRepository
+                .findByTitleContainingIgnoreCaseOrGalleryContainingIgnoreCase(
+                        q, q, PageRequest.of(0, limit));
+
         return list.stream().map(this::toSimpleDto).toList();
     }
+
 
 
 
@@ -60,6 +67,7 @@ public class ExhibitionQueryService {
                 .exhibitionTitle(e.getTitle())
                 .exhibitionImage(e.getPosterUrl())
                 .artCount(e.getArtCount())
+                .gallery(e.getGallery())
                 .build();
     }
 
