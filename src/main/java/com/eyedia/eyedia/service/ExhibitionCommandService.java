@@ -51,4 +51,17 @@ public class ExhibitionCommandService {
         bookmarkRepository.save(bookmark);
 
     }
+
+    public void deleteBookmarkVisitedExhibitionByUser(Long uid, Long exhibitionId) {
+        // 유저, 전시아이디 유효한지 확인
+        var exhibition = popularityRepository.findById(exhibitionId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.INVALID_EXHIBITION_ID));
+        var user = userRepository.findById(uid)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
+        var bookmark = bookmarkRepository.findBookmarkByUser_UsersIdAndExhibition_ExhibitionsId(uid, exhibitionId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.BOOKMARK_NOT_FOUND));
+        bookmark.unlink();
+        bookmarkRepository.delete(bookmark);
+
+    }
 }
