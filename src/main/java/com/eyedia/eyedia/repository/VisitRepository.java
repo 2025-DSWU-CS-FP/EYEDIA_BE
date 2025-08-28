@@ -60,4 +60,41 @@ public interface VisitRepository extends JpaRepository<Visit, Long> {
             @Param("exhibitionId") Long exhibitionId
     );
 
+    // 전체 + 최신순 (MAX(visitedAt) DESC) + keyword 필터
+    @Query("""
+    select e
+    from Visit v
+      join v.exhibition e
+    where v.user.usersId = :userId
+      and (
+        :keyword is null or :keyword = '' or
+        lower(e.title)   like lower(concat('%', :keyword, '%')) or
+        lower(e.gallery) like lower(concat('%', :keyword, '%')))
+    group by e
+    order by max(v.visitedAt) desc
+    """)
+    Page<Exhibition> findViewedOrderByRecent(
+            @Param("userId") Long userId,
+            @Param("keyword") String keyword,
+            Pageable pageable
+    );
+    // 전체 + 오래된순 (MAX(visitedAt) DESC) + keyword 필터
+    @Query("""
+        select e
+        from Visit v join v.exhibition e
+        where v.user.usersId = :userId
+          and (:keyword is null or :keyword = '' 
+               or lower(e.title) like lower(concat('%', :keyword, '%'))
+               or lower(e.gallery) like lower(concat('%', :keyword, '%')))
+
+        group by e
+        order by min(v.visitedAt) asc
+        """)
+    Page<Exhibition> findViewedOrderByOldest(
+            @Param("userId") Long userId,
+            @Param("keyword") String keyword,
+            Pageable pageable
+    );
+
+
 }

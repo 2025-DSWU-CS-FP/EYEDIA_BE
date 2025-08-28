@@ -1,14 +1,19 @@
 package com.eyedia.eyedia.controller;
 
+import com.eyedia.eyedia.domain.enums.ViewedSort;
 import com.eyedia.eyedia.dto.ExhibitionDTO;
 import com.eyedia.eyedia.dto.PageResponse;
 import com.eyedia.eyedia.global.ApiResponse;
 import com.eyedia.eyedia.service.ExhibitionQueryService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -60,39 +65,59 @@ public class ExhibitionController {
     ) {
         return ApiResponse.onSuccess(exhibitionService.getPopularDetailPage(exhibitionId));
     }
-    // 글자 단위 검색
+    // 인기 전시 - 글자 단위 검색
     @Operation(summary = "전시 검색 API", description = "갤러리, 전시명을 기반으로 글자 기준으로 전시회 조회")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "EXHIBITION400", description = "유효하지 않은 id값입니다.")
-
     })
-    @GetMapping("/suggest")
-    public ApiResponse<List<ExhibitionDTO.ExhibitionSimpleResponseDTO>> suggest(
+    @GetMapping("/popular/suggest")
+    public ApiResponse<List<ExhibitionDTO.ExhibitionSimpleResponseDTO>> suggestPopularList(
             @RequestParam String q,
             @RequestParam(defaultValue = "10") int limit
     ) {
         return ApiResponse.onSuccess(exhibitionService.suggest(q, limit));
     }
-    // 나의 전시 - 내가 관람한 전시 조회_최신순
-    @Operation(summary = "방문한 전시 중 최신순 정렬 API", description = "사용자가 방문한 전시 리스트 중에서 최신순으로 정렬한 리스트 조회")
+    // ------- 나의 전시 ------------
+
+    /** 정렬 기준
+     * 나의 전시 - 각 조건별 필터링
+     *  - RECENT: 내가 방문한 시각(visitedAt)의 최대값 기준 내림차순
+     *  - DATE:   내가 방문한 일자의 오름차순
+     */
+    @GetMapping("/viewed")
+    @Operation(summary = "내가 관람한 전시 목록 조회 및 검색",
+            description = "검색어/즐겨찾기/정렬(최신순·날짜순) 조건으로 페이징 조회")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "EXHIBITION400", description = "유효하지 않은 id값입니다.")
-
     })
-    @GetMapping("/visit/filter-recent")
-    public ApiResponse<PageResponse<ExhibitionDTO.ExhibitionSimpleResponseDTO>> visit(
-            @AuthenticationPrincipal String userId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "12") int limit
+    public ApiResponse<PageResponse<ExhibitionDTO.ExhibitionSimpleResponseDTO>> getUserVisitedViewed(
+            @Schema(hidden = true) @AuthenticationPrincipal String userId,
+            @RequestParam(required = false, name = "keyword")
+            @Schema(description = "부분 일치 검색(전시명/갤러리명)", example = "미술관") String keyword,
+            @RequestParam(defaultValue = "false", name = "isBookmarked")
+            @Schema(description = "즐겨찾기만 보기", example = "true") boolean isBookmarked,
+            @RequestParam(defaultValue = "RECENT", name = "sort")
+            @Schema(implementation = ViewedSort.class,
+                    description = "정렬기준: RECENT=방문 최신순, DATE=방문 오래된순",
+                    example = "RECENT") ViewedSort sort,
+            @RequestParam(defaultValue = "0") @Schema(example = "0") int page,
+            @RequestParam(defaultValue = "12") @Schema(example = "12") int limit
     ) {
-        // user id
         Long uid = Long.valueOf(userId);
-        var result = exhibitionService.getMyVisitedExhibitionsLatest(uid, page, limit);
-        return ApiResponse.onSuccess(PageResponse.from(result));
 
+        Page<ExhibitionDTO.ExhibitionSimpleResponseDTO> result =
+                exhibitionService.getMyViewed(
+                        uid,
+                        keyword,          // 검색어 (nullable)
+                        isBookmarked,     // 즐겨찾기만 여부
+                        sort,             // recent | date
+                        PageRequest.of(page, limit)
+                );
+
+        return ApiResponse.onSuccess(PageResponse.from(result));
     }
+
     // 나의 전시 - 전시 상세 페이지 조회
     @Operation(summary = "사용자가 방문한 전시의 상세페이지 조회 API", description = "사용자가 방문한 전시의 상세페이지와 발췌 카드 리스트 조회")
     @ApiResponses({
