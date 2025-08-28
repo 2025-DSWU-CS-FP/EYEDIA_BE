@@ -29,7 +29,10 @@ public enum ErrorStatus implements BaseErrorCode {
     // 전시 관련
     EXHIBITION_NOT_FOUND(HttpStatus.NOT_FOUND, "EXHIBITION404", "전시를 찾을 수 없습니다."),
     INVALID_EXHIBITION_ID(HttpStatus.BAD_REQUEST, "EXHIBITION400", "잘못된 전시 ID입니다."),
-    VISIT_RECORD_NOT_FOUND(HttpStatus.BAD_REQUEST, "EXHIBITION402", "사용자가 방문한 적 없습니다.");
+    VISIT_RECORD_NOT_FOUND(HttpStatus.BAD_REQUEST, "EXHIBITION402", "사용자가 방문한 적 없습니다."),
+
+    // viewedSort enum 관련
+    INVALID_SORT_FILTER(HttpStatus.BAD_REQUEST, "EXHIBITION403", "유효하지 않은 정렬 기준입니다. RECENT, DATE만 사용 가능");
 
 
 
