@@ -73,6 +73,8 @@ public class ExhibitionDTO {
         String exhibitionAuthor;
         LocalDateTime visitedAt;
 
+        public boolean bookmark;
+
         List<ScrapCard> scrapCards;
     }
 
