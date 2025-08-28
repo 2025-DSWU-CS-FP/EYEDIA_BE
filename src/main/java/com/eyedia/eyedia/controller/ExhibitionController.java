@@ -138,8 +138,15 @@ public class ExhibitionController {
     }
 
     // ------- 전시 북마크 ------------
-    @GetMapping("/{exhibitionId}/bookmark")
-    public ApiResponse<?> bookmark(
+    @Operation(summary = "북마크 등록 API", description = "사용자가 방문한 전시에서 북마크 등록")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "EXHIBITION400", description = "유효하지 않은 id값입니다."),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "BOOKMARK405", description = "이미 즐겨찾기 등록되었습니다."),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "USER404", description = "해당하는 유저 정보가 없습니다.")
+    })
+    @PostMapping("/{exhibitionId}/bookmark")
+    public ApiResponse<?> addBookmark(
             @Schema(hidden = true) @AuthenticationPrincipal String userId,
             @PathVariable Long exhibitionId
     ) {
