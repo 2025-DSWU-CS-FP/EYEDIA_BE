@@ -4,6 +4,7 @@ import com.eyedia.eyedia.domain.enums.ViewedSort;
 import com.eyedia.eyedia.dto.ExhibitionDTO;
 import com.eyedia.eyedia.dto.PageResponse;
 import com.eyedia.eyedia.global.ApiResponse;
+import com.eyedia.eyedia.service.ExhibitionCommandService;
 import com.eyedia.eyedia.service.ExhibitionQueryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -21,6 +22,7 @@ import java.util.List;
 @RequestMapping("/api/v1/exhibitions")
 public class ExhibitionController {
     private final ExhibitionQueryService exhibitionService;
+    private final ExhibitionCommandService exhibitionCommandService;
 
     // 메인 섹션용 Top N
     @Operation(summary = "Top N 개의 인기 전시 조회 API", description = "Top N 개의 인기 전시 조회")
@@ -133,6 +135,18 @@ public class ExhibitionController {
         // user id
         Long uid = Long.valueOf(userId);
         return ApiResponse.onSuccess(exhibitionService.getMyVisitedExhibitionDetail(uid, exhibitionId));
+    }
+
+    // ------- 전시 북마크 ------------
+    @GetMapping("/{exhibitionId}/bookmark")
+    public ApiResponse<?> bookmark(
+            @Schema(hidden = true) @AuthenticationPrincipal String userId,
+            @PathVariable Long exhibitionId
+    ) {
+        Long uid = Long.valueOf(userId);
+        exhibitionCommandService.bookmarkVisitedExhibitionByUser(uid, exhibitionId);
+        return ApiResponse.onSuccessWithoutResult();
+
     }
 
 }

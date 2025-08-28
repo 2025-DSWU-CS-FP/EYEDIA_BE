@@ -30,4 +30,18 @@ public class Bookmark extends BaseEntity {
     @JoinColumn(name = "users_id")
     private User user;
 
+    public void link(User user, Exhibition exhibition) {
+        this.user = user;
+        this.exhibition = exhibition;
+        user.getBookmarks().add(this);
+        exhibition.getBookmarks().add(this);
+    }
+
+    public void unlink() {
+        if (user != null) user.getBookmarks().remove(this);
+        if (exhibition != null) exhibition.getBookmarks().remove(this);
+        this.user = null;
+        this.exhibition = null;
+    }
+
 }

@@ -49,7 +49,8 @@ public interface BookmarkRepository  extends JpaRepository<Bookmark, Long> {
             @Param("keyword") String keyword,
             Pageable pageable
     );
-
+    // 이전에 북마크 여부 확인
+    boolean existsByUser_UsersIdAndExhibition_ExhibitionsId(Long usersId, Long exhibitionsId);
 
 
 }
