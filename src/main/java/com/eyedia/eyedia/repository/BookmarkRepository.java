@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Optional;
+
 public interface BookmarkRepository  extends JpaRepository<Bookmark, Long> {
 
     @Query("""
@@ -49,7 +51,9 @@ public interface BookmarkRepository  extends JpaRepository<Bookmark, Long> {
             @Param("keyword") String keyword,
             Pageable pageable
     );
-
-
+    // 이전에 북마크 여부 확인
+    boolean existsByUser_UsersIdAndExhibition_ExhibitionsId(Long usersId, Long exhibitionsId);
+    // 사용자 아이디, 전시 아이디로 북마크 조회
+    Optional<Bookmark> findBookmarkByUser_UsersIdAndExhibition_ExhibitionsId(Long usersId, Long exhibitionsId);
 
 }

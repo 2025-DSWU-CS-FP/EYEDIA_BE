@@ -4,6 +4,7 @@ import com.eyedia.eyedia.domain.enums.ViewedSort;
 import com.eyedia.eyedia.dto.ExhibitionDTO;
 import com.eyedia.eyedia.dto.PageResponse;
 import com.eyedia.eyedia.global.ApiResponse;
+import com.eyedia.eyedia.service.ExhibitionCommandService;
 import com.eyedia.eyedia.service.ExhibitionQueryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -21,6 +22,7 @@ import java.util.List;
 @RequestMapping("/api/v1/exhibitions")
 public class ExhibitionController {
     private final ExhibitionQueryService exhibitionService;
+    private final ExhibitionCommandService exhibitionCommandService;
 
     // 메인 섹션용 Top N
     @Operation(summary = "Top N 개의 인기 전시 조회 API", description = "Top N 개의 인기 전시 조회")
@@ -133,6 +135,44 @@ public class ExhibitionController {
         // user id
         Long uid = Long.valueOf(userId);
         return ApiResponse.onSuccess(exhibitionService.getMyVisitedExhibitionDetail(uid, exhibitionId));
+    }
+
+    // ------- 전시 북마크 ------------
+    @Operation(summary = "북마크 등록 API", description = "사용자가 방문한 전시에서 북마크 등록")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "EXHIBITION400", description = "유효하지 않은 id값입니다."),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "BOOKMARK405", description = "이미 즐겨찾기 등록되었습니다."),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "USER404", description = "해당하는 유저 정보가 없습니다.")
+    })
+    @PostMapping("/{exhibitionId}/bookmark")
+    public ApiResponse<?> addBookmark(
+            @Schema(hidden = true) @AuthenticationPrincipal String userId,
+            @PathVariable Long exhibitionId
+    ) {
+        Long uid = Long.valueOf(userId);
+        exhibitionCommandService.bookmarkVisitedExhibitionByUser(uid, exhibitionId);
+        return ApiResponse.onSuccessWithoutResult();
+
+    }
+    // 북마크 해제
+    @Operation(summary = "북마크 해제 API", description = "사용자가 방문한 전시에서 북마크 해제")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "EXHIBITION400", description = "유효하지 않은 id값입니다."),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "BOOKMARK405", description = "이미 즐겨찾기 등록되었습니다."),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "BOOKMARK404", description = "즐겨찾기가 되어 있지 않습니다."),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "USER404", description = "해당하는 유저 정보가 없습니다.")
+    })
+    @DeleteMapping("/{exhibitionId}/bookmark")
+    public ApiResponse<?> deleteBookmark(
+            @Schema(hidden = true) @AuthenticationPrincipal String userId,
+            @PathVariable Long exhibitionId
+    ) {
+        Long uid = Long.valueOf(userId);
+        exhibitionCommandService.deleteBookmarkVisitedExhibitionByUser(uid, exhibitionId);
+        return ApiResponse.onSuccessWithoutResult();
+
     }
 
 }

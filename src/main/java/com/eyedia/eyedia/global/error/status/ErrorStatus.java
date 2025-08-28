@@ -32,7 +32,14 @@ public enum ErrorStatus implements BaseErrorCode {
     VISIT_RECORD_NOT_FOUND(HttpStatus.BAD_REQUEST, "EXHIBITION402", "사용자가 방문한 적 없습니다."),
 
     // viewedSort enum 관련
-    INVALID_SORT_FILTER(HttpStatus.BAD_REQUEST, "EXHIBITION403", "유효하지 않은 정렬 기준입니다. RECENT, DATE만 사용 가능");
+    INVALID_SORT_FILTER(HttpStatus.BAD_REQUEST, "EXHIBITION403", "유효하지 않은 정렬 기준입니다. RECENT, DATE만 사용 가능"),
+
+    // 사용자 관련
+    USER_NOT_FOUND(HttpStatus.BAD_REQUEST, "USER404", "해당하는 유저 정보가 없습니다."),
+
+    // 즐겨찾기 관련
+    ALREADY_BOOKMARK_EXISTS(HttpStatus.BAD_REQUEST, "BOOKMARK405", "이미 즐겨찾기되었습니다."),
+    BOOKMARK_NOT_FOUND(HttpStatus.BAD_REQUEST, "BOOKMARK404", "즐겨찾기가 되어 있지 않습니다.");
 
 
 
