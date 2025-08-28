@@ -72,14 +72,13 @@ public class SecurityConfig {
                                 "/api/v1/ai/**",
                                 "/chat/send-ai-message",
                                 "/ws-stomp", "/ws-stomp/**",
-                                "/", "/health-check"
+                                "/", "/health-check",
+                                "/api/v1/paintings/**",
+                                "/api/v1/events/mock-detect" // 테스트용 임시로 추가
                         ).permitAll()
 
                         // mock-detect는 인증 필요(Principal 써서 개인 큐로 보내기 때문)
-                        .requestMatchers(HttpMethod.POST, "/api/v1/events/mock-detect").authenticated()
-
-                        // 필요시 paintings는 인증 필요로 두는 걸 권장(지금은 전부 허용돼 있었음)
-                        .requestMatchers("/api/v1/paintings/**").authenticated()
+//                        .requestMatchers(HttpMethod.POST, "/api/v1/events/mock-detect").authenticated()
 
                         // 그 외는 인증
                         .anyRequest().authenticated()
