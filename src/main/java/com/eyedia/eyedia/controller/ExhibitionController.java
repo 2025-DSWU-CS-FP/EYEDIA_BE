@@ -99,7 +99,7 @@ public class ExhibitionController {
             @Schema(description = "즐겨찾기만 보기", example = "true") boolean isBookmarked,
             @RequestParam(defaultValue = "RECENT", name = "sort")
             @Schema(implementation = ViewedSort.class,
-                    description = "정렬기준: RECENT=방문 최신순, DATE=방문 오래된순",
+                    description = "정렬기준: RECENT=방문 최신순, DATE=방문 오래된순", defaultValue = "RECENT",
                     example = "RECENT") ViewedSort sort,
             @RequestParam(defaultValue = "0") @Schema(example = "0") int page,
             @RequestParam(defaultValue = "12") @Schema(example = "12") int limit
