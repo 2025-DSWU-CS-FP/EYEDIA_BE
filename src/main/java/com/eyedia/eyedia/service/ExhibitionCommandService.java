@@ -10,6 +10,7 @@ import com.eyedia.eyedia.repository.VisitRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -63,5 +64,12 @@ public class ExhibitionCommandService {
         bookmark.unlink();
         bookmarkRepository.delete(bookmark);
 
+    }
+
+    public Integer getMonthlyVisitCount(Long  userId) {
+
+       var visitCount = visitRepository.countVisitsByUserAndMonth(
+               userId, LocalDateTime.now().getYear(), LocalDateTime.now().getMonthValue());
+       return visitCount == null ? 0 : visitCount;
     }
 }

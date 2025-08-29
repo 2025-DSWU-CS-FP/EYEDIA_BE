@@ -7,6 +7,7 @@ import com.eyedia.eyedia.dto.UserLoginDTO;
 import com.eyedia.eyedia.dto.UserLoginResponseDTO;
 import com.eyedia.eyedia.dto.UserSignupDTO;
 import com.eyedia.eyedia.repository.UserRepository;
+import com.eyedia.eyedia.service.ExhibitionCommandService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,6 +21,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
+    private final ExhibitionCommandService exhibitionCommandService;
 
     // 회원가입
     public void signup(UserSignupDTO dto) {
@@ -45,6 +47,7 @@ public class AuthService {
         User user = userRepository.findById(dto.getId())
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 아이디입니다."));
 
+
         if (!passwordEncoder.matches(dto.getPw(), user.getPw())) {
             throw new RuntimeException("비밀번호가 일치하지 않습니다.");
         }
@@ -59,10 +62,16 @@ public class AuthService {
         // 토큰 생성
         var jwt = jwtProvider.generateToken(user.getUsersId());
 
+        // 메인페이지 용 개인정보
+        var name = user.getName() == null ? "미정" : user.getName();
+        var monthlyVisitCount = exhibitionCommandService.getMonthlyVisitCount(user.getUsersId());
+
         // 응답 빌드 및 전송
         return UserLoginResponseDTO.builder()
                 .token(jwt)
                 .isFirstLogin(isFist)
+                .name(name)
+                .monthlyVisitCount(monthlyVisitCount)
                 .build();
     }
 
