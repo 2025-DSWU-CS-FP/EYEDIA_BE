@@ -24,6 +24,7 @@ public class PaintingService {
     private final MessageRepository messageRepository;
     private final UserRepository userRepository;
     private final ExhibitionRepository exhibitionRepository;
+    private final ExhibitionCommandService exhibitionCommandService;
 
     public PaintingConfirmResponse confirmPainting(Long artId) {
         Long userId = SecurityUtil.getCurrentUserId();
@@ -35,9 +36,13 @@ public class PaintingService {
         Painting paintingRoom = Painting.builder()
                 .user(user)
                 .artId(artId)
+                .exhibition(exhibitionCommandService.getExhibitionById(1L))
                 .build();
 
         Painting response = paintingRepository.save(paintingRoom);
+
+        // 전시 방문 이력 저장
+        exhibitionCommandService.addVisit(response);
 
         return PaintingConfirmResponse.builder()
                 .chatRoomId(response.getPaintingId())
