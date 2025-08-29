@@ -10,4 +10,7 @@ import lombok.Setter;
 public class UserLoginResponseDTO {
     private String token;
     private boolean isFirstLogin;
+
+    private String name;
+    private Integer monthlyVisitCount;
 }

@@ -6,7 +6,10 @@ import com.eyedia.eyedia.domain.enums.Gender;
 import com.eyedia.eyedia.dto.UserLoginDTO;
 import com.eyedia.eyedia.dto.UserLoginResponseDTO;
 import com.eyedia.eyedia.dto.UserSignupDTO;
+import com.eyedia.eyedia.global.error.exception.GeneralException;
+import com.eyedia.eyedia.global.error.status.ErrorStatus;
 import com.eyedia.eyedia.repository.UserRepository;
+import com.eyedia.eyedia.service.ExhibitionCommandService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,11 +23,12 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
+    private final ExhibitionCommandService exhibitionCommandService;
 
     // 회원가입
     public void signup(UserSignupDTO dto) {
         if (userRepository.existsById(dto.getId())) {
-            throw new RuntimeException("이미 존재하는 아이디입니다.");
+            throw new GeneralException(ErrorStatus.ALREADY_USER_ID_EXISTS);
         }
 
         User user = User.builder()
@@ -43,10 +47,10 @@ public class AuthService {
     // 로그인
     public UserLoginResponseDTO login(UserLoginDTO dto) {
         User user = userRepository.findById(dto.getId())
-                .orElseThrow(() -> new RuntimeException("존재하지 않는 아이디입니다."));
+                .orElseThrow( () -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
 
         if (!passwordEncoder.matches(dto.getPw(), user.getPw())) {
-            throw new RuntimeException("비밀번호가 일치하지 않습니다.");
+            throw new GeneralException(ErrorStatus.WRONG_PASSWORD);
         }
         // 첫 로그인인 경우
         boolean isFist;
@@ -59,10 +63,16 @@ public class AuthService {
         // 토큰 생성
         var jwt = jwtProvider.generateToken(user.getUsersId());
 
+        // 메인페이지 용 개인정보
+        var name = user.getName() == null ? "미정" : user.getName();
+        var monthlyVisitCount = exhibitionCommandService.getMonthlyVisitCount(user.getUsersId());
+
         // 응답 빌드 및 전송
         return UserLoginResponseDTO.builder()
                 .token(jwt)
                 .isFirstLogin(isFist)
+                .name(name)
+                .monthlyVisitCount(monthlyVisitCount)
                 .build();
     }
 

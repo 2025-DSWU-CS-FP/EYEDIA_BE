@@ -96,5 +96,15 @@ public interface VisitRepository extends JpaRepository<Visit, Long> {
             Pageable pageable
     );
 
+    @Query("""
+        select count(v)
+        from Visit v
+        where v.user.usersId = :userId
+            and YEAR(v.visitedAt) = :year
+            and MONTH(v.visitedAt) = :month
+    """)
+    Integer countVisitsByUserAndMonth(@Param("userId") Long userId,
+                                   @Param("year") int year,
+                                   @Param("month") int month);
 
 }

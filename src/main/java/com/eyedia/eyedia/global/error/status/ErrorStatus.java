@@ -37,6 +37,8 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // 사용자 관련
     USER_NOT_FOUND(HttpStatus.BAD_REQUEST, "USER404", "해당하는 유저 정보가 없습니다."),
+    WRONG_PASSWORD(HttpStatus.BAD_REQUEST, "USER403", "비밀번호가 틀렸습니다."),
+    ALREADY_USER_ID_EXISTS(HttpStatus.BAD_REQUEST, "USER401", "이미 존재하는 아이디입니다."),
 
     // 즐겨찾기 관련
     ALREADY_BOOKMARK_EXISTS(HttpStatus.BAD_REQUEST, "BOOKMARK405", "이미 즐겨찾기되었습니다."),
