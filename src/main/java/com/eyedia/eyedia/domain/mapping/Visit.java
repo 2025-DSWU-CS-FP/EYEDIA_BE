@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
 import static jakarta.persistence.FetchType.LAZY;
@@ -33,5 +34,7 @@ public class Visit extends BaseEntity {
     @JoinColumn(name = "exhibitions_id")
     private Exhibition exhibition;
 
+    @CreatedDate
+    @Column(updatable = false)
     private LocalDateTime visitedAt;
 }
