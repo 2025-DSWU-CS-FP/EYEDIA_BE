@@ -1,12 +1,12 @@
 package com.eyedia.eyedia.service;
 
+import com.eyedia.eyedia.domain.Exhibition;
+import com.eyedia.eyedia.domain.Painting;
 import com.eyedia.eyedia.domain.mapping.Bookmark;
+import com.eyedia.eyedia.domain.mapping.Visit;
 import com.eyedia.eyedia.global.error.exception.GeneralException;
 import com.eyedia.eyedia.global.error.status.ErrorStatus;
-import com.eyedia.eyedia.repository.BookmarkRepository;
-import com.eyedia.eyedia.repository.ExhibitionRepository;
-import com.eyedia.eyedia.repository.UserRepository;
-import com.eyedia.eyedia.repository.VisitRepository;
+import com.eyedia.eyedia.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +19,8 @@ public class ExhibitionCommandService {
     private final VisitRepository visitRepository;
     private final BookmarkRepository bookmarkRepository;
     private final UserRepository userRepository;
+    private final ExhibitionRepository exhibitionRepository;
+    private final PaintingRepository paintingRepository;
 
 
     public void bookmarkVisitedExhibitionByUser(Long userId, Long exhibitionId) {
@@ -63,5 +65,29 @@ public class ExhibitionCommandService {
         bookmark.unlink();
         bookmarkRepository.delete(bookmark);
 
+    }
+
+    @Transactional
+    public void addVisit(Painting painting) {
+
+        Exhibition exhibition = painting.getExhibition();
+        if (exhibition == null) {
+            throw new GeneralException(ErrorStatus.EXHIBITION_NULL_EXCEPTION);
+        }
+        var user = painting.getUser();
+        if (user == null) {
+            throw new GeneralException(ErrorStatus.USER_NOT_FOUND);
+        }
+
+        Visit visit = Visit.builder()
+                .user(user)
+                .exhibition(exhibition)
+                .build();
+
+        visitRepository.save(visit);
+    }
+
+    public Exhibition getExhibitionById(long l) {
+        return exhibitionRepository.findById(1L).orElseThrow(() -> new GeneralException(ErrorStatus.INVALID_EXHIBITION_ID));
     }
 }
