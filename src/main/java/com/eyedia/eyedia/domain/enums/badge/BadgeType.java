@@ -1,4 +1,4 @@
-package com.eyedia.eyedia.domain.enums;
+package com.eyedia.eyedia.domain.enums.badge;
 
 public enum BadgeType {
     COLLECTION,    // 전시 수집
