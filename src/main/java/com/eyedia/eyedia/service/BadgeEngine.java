@@ -54,6 +54,8 @@ public class BadgeEngine {
                         return progressRepo.save(Badge.builder()
                                 .user(user)
                                 .code(def.getCode())
+                                .title(def.getTitle())
+                                .description(def.getDescriptionKey())
                                 .status(ProgressStatus.LOCKED)
                                 .currentValue(0)
                                 .goalValue(def.getGoalValue())

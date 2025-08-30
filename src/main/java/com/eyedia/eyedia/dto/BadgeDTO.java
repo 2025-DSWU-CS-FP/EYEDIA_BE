@@ -1,38 +1,29 @@
 package com.eyedia.eyedia.dto;
 
 import com.eyedia.eyedia.domain.enums.badge.EventType;
-import com.eyedia.eyedia.domain.enums.badge.ProgressStatus;
-import com.eyedia.eyedia.domain.enums.badge.BadgeType;
 import lombok.*;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
 public class BadgeDTO {
-
-    @Builder
-    @Getter
-    @AllArgsConstructor(access = AccessLevel.PROTECTED)
-    public static class BadgeResponseDTO {
-        Integer allValue;
-        Integer achievedValue;
-        String nextGoal;
-        List<BadgeDetailDTO> badges;
-
+    @Getter @Setter @Builder
+    public static class BadgeSummaryDto {
+        private int acquired;
+        private int total;
+        private BadgeCardDto nextTarget;
+        private List<BadgeCardDto> badges;
     }
-    @Builder
-    @Getter
-    @AllArgsConstructor(access = AccessLevel.PROTECTED)
-    public static class BadgeDetailDTO {
-        Long badgeId;
-        String title;
-        String description;
-        BadgeType type;
+
+    @Getter @Setter @Builder
+    public static class BadgeCardDto {
+        private String code;
+        private String title;
+        private String description;
+        private String status; // ACQUIRED | IN_PROGRESS | LOCKED
+        private LocalDateTime awardedAt; // 획득이면 값 존재
         Integer goalValue;
         Integer currentValue;
-        ProgressStatus status;
-
     }
 
     @Getter @Setter
