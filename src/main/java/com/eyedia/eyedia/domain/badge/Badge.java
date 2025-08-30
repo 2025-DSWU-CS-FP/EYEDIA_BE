@@ -50,4 +50,11 @@ public class Badge extends BaseEntity {
 
     @Column(columnDefinition = "json")
     private String metaJson;
+
+    @Column(nullable = false, length = 64)
+    private String title;
+
+    @Column(nullable = false, length = 64)
+    private String description;
+
 }
