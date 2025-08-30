@@ -1,5 +1,7 @@
 package com.eyedia.eyedia.domain;
 
+import com.eyedia.eyedia.domain.badge.Badge;
+import com.eyedia.eyedia.domain.badge.UserBadgeAward;
 import com.eyedia.eyedia.domain.common.BaseEntity;
 import com.eyedia.eyedia.domain.enums.Gender;
 import com.eyedia.eyedia.domain.mapping.Bookmark;
@@ -61,6 +63,9 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Badge> badges = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<UserBadgeAward> userBadgeAwards = new ArrayList<>();
 
     public void setIsFirstLogin(boolean isFirstLogin) {
         this.isFirstLogin = isFirstLogin;
