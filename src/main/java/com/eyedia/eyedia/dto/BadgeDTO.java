@@ -24,6 +24,7 @@ public class BadgeDTO {
         private LocalDateTime awardedAt; // 획득이면 값 존재
         Integer goalValue;
         Integer currentValue;
+        boolean newBadge;
     }
 
     @Getter @Setter
