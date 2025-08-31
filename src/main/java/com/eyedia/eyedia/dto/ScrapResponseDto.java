@@ -3,6 +3,8 @@ package com.eyedia.eyedia.dto;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Builder
 public class ScrapResponseDto {
@@ -14,4 +16,5 @@ public class ScrapResponseDto {
     private String location;
     private String imageUrl;
     private String artist;
+    // private LocalDateTime createdAt;
 }

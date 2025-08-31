@@ -15,14 +15,14 @@ import java.security.Principal;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/scraps")
+@RequestMapping("/api/v1")
 @RequiredArgsConstructor
 @Tag(name = "Scrap API", description = "스크랩 관련 API")
 public class ScrapController {
 
     private final ScrapService scrapService;
 
-    @PostMapping("/save")
+    @PostMapping("/scraps/save")
     @Operation(summary = "스크랩 저장", description = "유저가 발췌한 정보를 저장합니다.")
     public ResponseEntity<?> saveScrap(
             @AuthenticationPrincipal String userId,
@@ -34,14 +34,14 @@ public class ScrapController {
         return ResponseEntity.ok().body(message);
     }
 
-    @GetMapping("/list")
+    @GetMapping("/scraps/list")
     @Operation(summary = "스크랩 목록 조회", description = "저장된 모든 스크랩 발췌 정보를 조회합니다.")
     public ResponseEntity<?> getScrapList() {
         List<ScrapResponseDto> list = scrapService.getScrapList();
         return ResponseEntity.ok().body(list);
     }
 
-    @GetMapping("/list/{userId}")
+    @GetMapping("/scraps/list/{userId}")
     @Operation(summary = "유저 + 전시별 스크랩 조회", description = "특정 유저가 특정 전시에서 남긴 스크랩 목록을 조회합니다.")
     public ResponseEntity<?> getScrapListByUserAndLocation(
             Principal principal,
@@ -59,5 +59,14 @@ public class ScrapController {
         }
     }
 
+    @GetMapping("/artworks/viewed")
+    @Operation(summary = "마이페이지 최근 스크랩 Top5", description = "로그인 사용자의 스크랩을 최신순(날짜↓, 같은 날은 id↓)으로 5개 반환합니다.")
+    public ResponseEntity<List<ScrapResponseDto>> getMyRecentTop5(
+             @AuthenticationPrincipal String userId
+    ) {
+        Long uid = Long.parseLong(userId);
+        var result = scrapService.getRecentTop5ByUserId(uid);
+        return ResponseEntity.ok(result);
+    }
 
 }

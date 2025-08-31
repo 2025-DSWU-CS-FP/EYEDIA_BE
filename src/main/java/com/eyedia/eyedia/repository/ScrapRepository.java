@@ -7,4 +7,6 @@ import java.util.List;
 public interface ScrapRepository extends JpaRepository<Scrap, Long> {
     List<Scrap> findByUserId(Long userId);
     List<Scrap> findByUserIdAndLocation(Long userId, String location);
+    List<Scrap> findTop5ByUserIdOrderByDateDesc(Long userId);
+
 }

@@ -95,5 +95,29 @@ public class ScrapService {
                 .collect(Collectors.toList());
     }
 
+    public List<ScrapResponseDto> getRecentTop5ByUserId(Long userId) {
+        List<Scrap> scraps = scrapRepository.findTop5ByUserIdOrderByDateDesc(userId);
+
+        return scraps.stream()
+                .map(scrap -> {
+                    // 🔍 paintingId로 imageUrl 조회
+                    String imageUrl = paintingRepository.findById(scrap.getPaintingId())
+                            .map(Painting::getImageUrl)
+                            .orElse(null);
+
+                    return ScrapResponseDto.builder()
+                            .id(scrap.getId())
+                            .userId(scrap.getUserId())
+                            .paintingId(scrap.getPaintingId())
+                            .date(scrap.getDate().toString())   // 최신순 정렬 기준 필드
+                            .excerpt(scrap.getExcerpt())
+                            .location(scrap.getLocation())
+                            .artist(scrap.getArtist())
+                            .imageUrl(imageUrl)
+                            .build();
+                })
+                .collect(Collectors.toList());
+    }
+
 
 }
