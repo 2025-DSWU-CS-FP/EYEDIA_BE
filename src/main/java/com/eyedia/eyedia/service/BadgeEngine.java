@@ -72,6 +72,7 @@ public class BadgeEngine {
             if (p.getCurrentValue() >= p.getGoalValue()) {
                 if (p.getStatus() != ProgressStatus.ACHIEVED) {
                     p.setStatus(ProgressStatus.ACHIEVED);
+                    p.setNewBadge(true);
                     if (p.getAchievedAt() == null) p.setAchievedAt(LocalDateTime.now());
                     if (!awardRepo.existsByUser_UsersIdAndCode(Long.valueOf(p.getUser().getUsersId()), p.getCode())) {
                         awardRepo.save(UserBadgeAward.builder()

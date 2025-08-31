@@ -57,4 +57,7 @@ public class Badge extends BaseEntity {
     @Column(nullable = false, length = 64)
     private String description;
 
+    @Column(name = "is_new", nullable = false)
+    boolean newBadge = false;
+
 }
