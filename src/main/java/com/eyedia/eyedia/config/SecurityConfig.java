@@ -72,7 +72,8 @@ public class SecurityConfig {
                                 "/api/v1/ai/**",
                                 "/chat/send-ai-message",
                                 "/ws-stomp", "/ws-stomp/**",
-                                "/", "/health-check"
+                                "/", "/health-check",
+                                "/api/v1/scraps/**"
                         ).permitAll()
 
                         // mock-detect는 인증 필요(Principal 써서 개인 큐로 보내기 때문)
