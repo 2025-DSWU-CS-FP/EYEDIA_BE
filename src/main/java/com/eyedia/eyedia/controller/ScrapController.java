@@ -8,8 +8,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -22,8 +24,12 @@ public class ScrapController {
 
     @PostMapping("/save")
     @Operation(summary = "스크랩 저장", description = "유저가 발췌한 정보를 저장합니다.")
-    public ResponseEntity<?> saveScrap(@RequestBody ScrapRequestDto dto) {
-        Scrap saved = scrapService.saveScrap(dto);
+    public ResponseEntity<?> saveScrap(
+            @AuthenticationPrincipal String userId,
+            @RequestBody ScrapRequestDto dto) {
+        Long uid = Long.parseLong(userId);
+
+        Scrap saved = scrapService.saveScrap(dto, uid);
         String message = "\"" + saved.getExcerpt() + "\"가 잘 저장되었습니다.";
         return ResponseEntity.ok().body(message);
     }
@@ -38,9 +44,11 @@ public class ScrapController {
     @GetMapping("/list/{userId}")
     @Operation(summary = "유저 + 전시별 스크랩 조회", description = "특정 유저가 특정 전시에서 남긴 스크랩 목록을 조회합니다.")
     public ResponseEntity<?> getScrapListByUserAndLocation(
-            @PathVariable Long userId,
+            Principal principal,
             @RequestParam(required = false) String location
     ) {
+        Long userId = Long.parseLong(principal.getName());
+
         if (location != null) {
             List<ScrapResponseDto> filtered = scrapService.getScrapListByUserAndLocation(userId, location);
             return ResponseEntity.ok().body(filtered);

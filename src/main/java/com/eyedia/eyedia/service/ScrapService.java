@@ -20,9 +20,9 @@ public class ScrapService {
     private final ScrapRepository scrapRepository;
     private final PaintingRepository paintingRepository;
 
-    public Scrap saveScrap(ScrapRequestDto dto) {
+    public Scrap saveScrap(ScrapRequestDto dto, Long userId) {
         Scrap scrap = Scrap.builder()
-                .userId(dto.getUserId())
+                .userId(userId)
                 .paintingId(dto.getPaintingId())
                 .date(LocalDate.parse(dto.getDate()))
                 .excerpt(dto.getExcerpt())
