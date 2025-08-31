@@ -3,6 +3,7 @@ package com.eyedia.eyedia.service.impl;
 import com.eyedia.eyedia.config.jwt.JwtProvider;
 import com.eyedia.eyedia.domain.User;
 import com.eyedia.eyedia.domain.enums.Gender;
+import com.eyedia.eyedia.dto.UserDTO;
 import com.eyedia.eyedia.dto.UserLoginDTO;
 import com.eyedia.eyedia.dto.UserLoginResponseDTO;
 import com.eyedia.eyedia.dto.UserSignupDTO;
@@ -74,6 +75,30 @@ public class AuthService {
                 .name(name)
                 .monthlyVisitCount(monthlyVisitCount)
                 .build();
+    }
+
+    public UserDTO.VerifyPasswordResponseDTO verifyPassword(long uid, String password) {
+        User user = userRepository.getUserByUsersId(uid);
+        if(user == null) {
+            throw new GeneralException(ErrorStatus.USER_NOT_FOUND);
+        }
+        if (!passwordEncoder.matches(password, user.getPw())) {
+            throw new GeneralException(ErrorStatus.WRONG_PASSWORD);
+        }
+        return toUserInfoDTO(true, user);
+    }
+    UserDTO.VerifyPasswordResponseDTO toUserInfoDTO(boolean verify, User user) {
+        var userInfoDTO = UserDTO.UserInfoDTO.builder()
+                .id(user.getId())
+                .username(user.getName())
+                .age(user.getAge())
+                .gender(user.getGender().toString())
+                .build();
+        return UserDTO.VerifyPasswordResponseDTO.builder()
+                .verified(verify)
+                .userInfo(userInfoDTO)
+                .build();
+
     }
 
 }
