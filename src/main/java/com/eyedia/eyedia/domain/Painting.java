@@ -21,7 +21,7 @@ public class Painting extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "painting_id")
+    @Column(name = "paintings_id")
     private Long paintingId;
 
     @Version

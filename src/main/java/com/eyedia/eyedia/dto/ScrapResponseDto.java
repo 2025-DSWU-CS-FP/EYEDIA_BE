@@ -1,0 +1,17 @@
+package com.eyedia.eyedia.dto;
+
+import lombok.Builder;
+import lombok.Getter;
+
+@Getter
+@Builder
+public class ScrapResponseDto {
+    private Long id;
+    private Long userId;
+    private Long paintingId;
+    private String date;
+    private String excerpt;
+    private String location;
+    private String imageUrl;
+    private String artist;
+}
