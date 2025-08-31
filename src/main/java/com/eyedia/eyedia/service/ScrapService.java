@@ -5,9 +5,13 @@ import com.eyedia.eyedia.dto.ScrapRequestDto;
 import com.eyedia.eyedia.domain.Scrap;
 import com.eyedia.eyedia.repository.PaintingRepository;
 import com.eyedia.eyedia.repository.ScrapRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import com.eyedia.eyedia.dto.ScrapResponseDto;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -95,29 +99,33 @@ public class ScrapService {
                 .collect(Collectors.toList());
     }
 
-    public List<ScrapResponseDto> getRecentTop5ByUserId(Long userId) {
-        List<Scrap> scraps = scrapRepository.findTop5ByUserIdOrderByDateDesc(userId);
+    @Transactional
+    public Page<ScrapResponseDto> getScrapsByUser(Long userId, Pageable pageable) {
+        Page<Scrap> scraps = scrapRepository.findByUserId(userId, pageable);
 
-        return scraps.stream()
-                .map(scrap -> {
-                    // 🔍 paintingId로 imageUrl 조회
-                    String imageUrl = paintingRepository.findById(scrap.getPaintingId())
-                            .map(Painting::getImageUrl)
-                            .orElse(null);
+        return scraps.map(scrap -> {
+            String imageUrl = paintingRepository.findById(scrap.getPaintingId())
+                    .map(Painting::getImageUrl)
+                    .orElse(null);
+            String title = paintingRepository.findById(scrap.getPaintingId())
+                    .map(Painting::getTitle)
+                    .orElse(null);
 
-                    return ScrapResponseDto.builder()
-                            .id(scrap.getId())
-                            .userId(scrap.getUserId())
-                            .paintingId(scrap.getPaintingId())
-                            .date(scrap.getDate().toString())   // 최신순 정렬 기준 필드
-                            .excerpt(scrap.getExcerpt())
-                            .location(scrap.getLocation())
-                            .artist(scrap.getArtist())
-                            .imageUrl(imageUrl)
-                            .build();
-                })
-                .collect(Collectors.toList());
+            return ScrapResponseDto.builder()
+                    .id(scrap.getId())
+                    .userId(scrap.getUserId())
+                    .paintingId(scrap.getPaintingId())
+                    .date(scrap.getDate().toString()) // LocalDate → String
+                    .excerpt(scrap.getExcerpt())
+                    .location(scrap.getLocation())
+                    .artist(scrap.getArtist())
+                    .imageUrl(imageUrl)
+                    .title(title)
+                    .build();
+        });
     }
+
+
 
 
 }

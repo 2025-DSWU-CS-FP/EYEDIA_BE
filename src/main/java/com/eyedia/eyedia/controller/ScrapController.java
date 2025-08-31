@@ -5,8 +5,13 @@ import com.eyedia.eyedia.domain.Scrap;
 import com.eyedia.eyedia.dto.ScrapResponseDto;
 import com.eyedia.eyedia.service.ScrapService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -60,12 +65,40 @@ public class ScrapController {
     }
 
     @GetMapping("/artworks/viewed")
-    @Operation(summary = "마이페이지 최근 스크랩 Top5", description = "로그인 사용자의 스크랩을 최신순(날짜↓, 같은 날은 id↓)으로 5개 반환합니다.")
-    public ResponseEntity<List<ScrapResponseDto>> getMyRecentTop5(
-             @AuthenticationPrincipal String userId
+    @Operation(
+            summary = "마이페이지 스크랩 목록 조회",
+            description = """
+                로그인 사용자의 스크랩 목록을 페이징하여 반환합니다.
+                - page: 페이지 번호 (0부터 시작)
+                - limit: 페이지당 개수
+                - sort: 정렬 기준 (recent = 최신순, old = 오래된 순)
+                """
+    )
+    public ResponseEntity<Page<ScrapResponseDto>> getMyScrapList(
+            @Parameter(hidden = true) @AuthenticationPrincipal String userId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int limit,
+            @RequestParam(defaultValue = "recent") String sort
     ) {
         Long uid = Long.parseLong(userId);
-        var result = scrapService.getRecentTop5ByUserId(uid);
+
+        Sort.Direction direction;
+        String sortProperty = "date"; // 기본 정렬 컬럼
+
+        switch (sort.toLowerCase()) {
+            case "old":
+                direction = Sort.Direction.ASC;
+                break;
+            case "recent":
+            default:
+                direction = Sort.Direction.DESC;
+                break;
+        }
+
+        Pageable pageable = (Pageable) PageRequest.of(page, limit, Sort.by(direction, sortProperty).and(Sort.by(direction, "id")));
+
+        Page<ScrapResponseDto> result = scrapService.getScrapsByUser(uid, pageable);
+
         return ResponseEntity.ok(result);
     }
 

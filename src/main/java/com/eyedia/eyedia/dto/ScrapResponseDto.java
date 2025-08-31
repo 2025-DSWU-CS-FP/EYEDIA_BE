@@ -16,5 +16,6 @@ public class ScrapResponseDto {
     private String location;
     private String imageUrl;
     private String artist;
+    private String title;
     // private LocalDateTime createdAt;
 }
