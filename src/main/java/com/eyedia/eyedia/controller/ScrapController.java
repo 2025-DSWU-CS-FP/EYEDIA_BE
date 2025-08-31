@@ -39,14 +39,14 @@ public class ScrapController {
         return ResponseEntity.ok().body(message);
     }
 
-    @GetMapping("/scraps/list")
-    @Operation(summary = "스크랩 목록 조회", description = "저장된 모든 스크랩 발췌 정보를 조회합니다.")
-    public ResponseEntity<?> getScrapList() {
-        List<ScrapResponseDto> list = scrapService.getScrapList();
-        return ResponseEntity.ok().body(list);
-    }
+//    @GetMapping("/scraps/list")
+//    @Operation(summary = "스크랩 목록 조회", description = "저장된 모든 스크랩 발췌 정보를 조회합니다.")
+//    public ResponseEntity<?> getScrapList() {
+//        List<ScrapResponseDto> list = scrapService.getScrapList();
+//        return ResponseEntity.ok().body(list);
+//    }
 
-    @GetMapping("/scraps/list/{userId}")
+    @GetMapping("/scraps/list")
     @Operation(summary = "유저 + 전시별 스크랩 조회", description = "특정 유저가 특정 전시에서 남긴 스크랩 목록을 조회합니다.")
     public ResponseEntity<?> getScrapListByUserAndLocation(
             Principal principal,
