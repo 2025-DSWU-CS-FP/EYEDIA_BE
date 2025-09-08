@@ -75,7 +75,8 @@ public class SecurityConfig {
                                 "/", "/health-check",
                                 "/api/v1/paintings/**",
                                 "/api/v1/scraps/**",
-                                "events/detect"
+                                "events/detect",
+                                "/chat/ask"
                         ).permitAll()
 
                         // 그 외는 인증

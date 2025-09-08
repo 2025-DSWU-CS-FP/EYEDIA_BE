@@ -9,6 +9,7 @@ spring:
     include:
       - jwt
       - s3
+      - openai
 #      - oauth
 logging:
   level:
