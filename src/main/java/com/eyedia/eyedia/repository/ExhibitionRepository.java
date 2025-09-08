@@ -14,6 +14,7 @@ import java.util.Optional;
 @Repository
 public interface ExhibitionRepository extends JpaRepository<Exhibition, Long> {
     Optional<Exhibition> findByTitle(String title);
+    Optional<Exhibition> findByPaintingsPaintingId(Long paintingId);
 
     // 북마크 등록 순: PK(=생성순) 기준
     @Query("""

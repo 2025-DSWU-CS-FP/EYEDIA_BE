@@ -1,39 +1,46 @@
 package com.eyedia.eyedia.controller;
 
 import com.eyedia.eyedia.dto.MessageDTO;
+import com.eyedia.eyedia.repository.ExhibitionRepository;
+import com.eyedia.eyedia.repository.PaintingRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.security.Principal;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
+@RequestMapping("/events")
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/events")
-public class DetectionEventController {
 
-    private final SimpMessagingTemplate messagingTemplate;
-    /**
-     * 25.08.17 <인식된 사진 프론트 전송>
-     * request : 방 데이터
-     * return : 이미지 id와 url
-     * */
-    @PostMapping("/mock-detect")
-    public ResponseEntity<Void> mockDetect(Principal principal) {
-        String userKey = principal.getName(); // <-- WebSocket CONNECT에서 setUser(...) 한 값
-        String img = "https://upload.wikimedia.org/wikipedia/commons/b/b7/Edgar_Degas_The_Dance_Class.jpg";
-        messagingTemplate.convertAndSendToUser(
-                userKey,
+public class DetectionEventController {
+    private final SimpMessageSendingOperations messagingTemplate;
+    private final PaintingRepository paintingRepository;
+    private final ExhibitionRepository exhibitionRepository;
+
+    @PostMapping("/detect")
+    public ResponseEntity<Void> detect(@RequestBody Long paintingId) {
+
+        var painting = paintingRepository.findById(paintingId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "painting not found"));
+        var exhibition = exhibitionRepository.findByPaintingsPaintingId(paintingId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "exhibition not found"));
+
+        messagingTemplate.convertAndSend(
                 "/queue/events",
                 MessageDTO.ChatImageResponseDTO.builder()
-                        .url(img)
-                        .artId(20001L)
+                        .imgUrl("https://s3-eyedia.s3.ap-northeast-2.amazonaws.com/1/" + paintingId + "/" + paintingId)
+                        .title(painting.getTitle())
+                        .artist(painting.getArtist())
+                        .description(painting.getDescription())
+                        .exhibition(exhibition.getTitle())
+                        .artId(paintingId)
                         .build()
         );
         return ResponseEntity.ok().build();
     }
-
 }
