@@ -92,7 +92,7 @@ public class ExhibitionQueryService {
             throw new GeneralException(ErrorStatus.VISIT_RECORD_NOT_FOUND);
         }
         // 데이터 꺼내오기
-        var dto = toMyDetailDTo(exhibition, visitedAt);
+        var dto = toMyDetailDTo(exhibition, visitedAt, isBookmarked(uid, exhibitionId));
 
         // 발췌 조회
 
@@ -124,6 +124,10 @@ public class ExhibitionQueryService {
         return result.map(this::toSimpleDto);
     }
 
+    public boolean isBookmarked(Long userId, Long exhibitionId) {
+        return bookmarkRepository.existsByUser_UsersIdAndExhibition_ExhibitionsId(userId, exhibitionId);
+    }
+
     // --- Mapper ---
 
     private ExhibitionDTO.ExhibitionSimpleResponseDTO toSimpleDto(Exhibition e) {
@@ -149,7 +153,7 @@ public class ExhibitionQueryService {
                 .build();
     }
 
-    private ExhibitionDTO.MyExhibitionDetailResponseDTO toMyDetailDTo(Exhibition e, LocalDateTime time) {
+    private ExhibitionDTO.MyExhibitionDetailResponseDTO toMyDetailDTo(Exhibition e, LocalDateTime time, boolean isBookmarked) {
         return ExhibitionDTO.MyExhibitionDetailResponseDTO.builder()
                 .exhibitionId(e.getExhibitionsId())
                 .exhibitionTitle(e.getTitle() != null ? e.getTitle() : "미정")
@@ -158,6 +162,7 @@ public class ExhibitionQueryService {
                 .exhibitionAuthor(e.getArtist())
                 .scrapCards(new ArrayList<>())
                 .visitedAt(time)
+                .bookmark(isBookmarked)
                 .gallery(e.getGallery() != null ? e.getGallery() : "미정")
                 .build();
     }

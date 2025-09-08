@@ -74,11 +74,9 @@ public class SecurityConfig {
                                 "/ws-stomp", "/ws-stomp/**",
                                 "/", "/health-check",
                                 "/api/v1/paintings/**",
-                                "/api/v1/events/mock-detect" // 테스트용 임시로 추가
+                                "/api/v1/scraps/**",
+                                "events/detect"
                         ).permitAll()
-
-                        // mock-detect는 인증 필요(Principal 써서 개인 큐로 보내기 때문)
-//                        .requestMatchers(HttpMethod.POST, "/api/v1/events/mock-detect").authenticated()
 
                         // 그 외는 인증
                         .anyRequest().authenticated()
