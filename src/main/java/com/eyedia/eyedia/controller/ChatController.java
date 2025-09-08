@@ -1,14 +1,11 @@
 package com.eyedia.eyedia.controller;
 import com.eyedia.eyedia.dto.MessageDTO;
-import com.eyedia.eyedia.repository.MessageRepository;
-import com.eyedia.eyedia.repository.PaintingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
 
