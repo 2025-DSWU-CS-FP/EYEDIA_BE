@@ -31,7 +31,7 @@ public class DetectionEventController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "exhibition not found"));
 
         messagingTemplate.convertAndSend(
-                "/queue/events",
+                "/topic/detections",
                 MessageDTO.ChatImageResponseDTO.builder()
                         .imgUrl("https://s3-eyedia.s3.ap-northeast-2.amazonaws.com/1/" + paintingId + "/" + paintingId)
                         .title(painting.getTitle())
