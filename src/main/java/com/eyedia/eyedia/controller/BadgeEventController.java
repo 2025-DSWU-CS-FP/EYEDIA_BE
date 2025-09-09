@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/vi/badges")
+@RequestMapping("/api/v1/badges")
 @RequiredArgsConstructor
 @Validated
 public class BadgeEventController {
