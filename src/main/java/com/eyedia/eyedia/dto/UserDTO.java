@@ -1,6 +1,11 @@
 package com.eyedia.eyedia.dto;
 
-import lombok.*;
+import com.eyedia.eyedia.global.validation.annotation.CheckLoginId;
+import com.eyedia.eyedia.global.validation.annotation.CheckNickName;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 
 public class UserDTO {
 
@@ -30,5 +35,20 @@ public class UserDTO {
         String gender;
         String id;
 
+    }
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class UpdateNickNamequest {
+
+        @CheckNickName
+        private String nickname;
+    }
+
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class UpdateLoginIdRequest {
+
+        @CheckLoginId
+        private String loginId;
     }
 }
