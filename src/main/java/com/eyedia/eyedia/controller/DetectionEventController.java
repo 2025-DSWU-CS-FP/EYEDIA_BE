@@ -25,9 +25,9 @@ public class DetectionEventController {
     @PostMapping("/detect")
     public ResponseEntity<Void> detect(@RequestBody Long paintingId) {
 
-        var painting = paintingRepository.findById(paintingId)
+        var painting = paintingRepository.findByObjectId(String.valueOf(paintingId))
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "painting not found"));
-        var exhibition = exhibitionRepository.findByPaintingsPaintingId(paintingId)
+        var exhibition = exhibitionRepository.findByPaintingsPaintingId(painting.getPaintingId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "exhibition not found"));
 
         messagingTemplate.convertAndSend(

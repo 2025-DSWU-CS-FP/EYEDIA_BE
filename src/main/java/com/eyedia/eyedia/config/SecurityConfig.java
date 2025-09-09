@@ -37,7 +37,8 @@ public class SecurityConfig {
                 "http://localhost:8000",
                 "http://localhost:8080",
                 "https://eyedia.netlify.app",
-                "https://eyedia.site"
+                "https://eyedia.site",
+                "http://3.34.240.201:8000"
         ));
         c.setAllowedMethods(List.of("GET","POST","PUT","DELETE","OPTIONS","PATCH"));
         c.setAllowedHeaders(List.of("Authorization","Content-Type","X-Requested-With","Accept"));
