@@ -37,7 +37,8 @@ public class SecurityConfig {
                 "http://localhost:8000",
                 "http://localhost:8080",
                 "https://eyedia.netlify.app",
-                "https://eyedia.site"
+                "https://eyedia.site",
+                "http://3.34.240.201:8000"
         ));
         c.setAllowedMethods(List.of("GET","POST","PUT","DELETE","OPTIONS","PATCH"));
         c.setAllowedHeaders(List.of("Authorization","Content-Type","X-Requested-With","Accept"));
@@ -73,14 +74,11 @@ public class SecurityConfig {
                                 "/chat/send-ai-message",
                                 "/ws-stomp", "/ws-stomp/**",
                                 "/", "/health-check",
-                                "/api/v1/scraps/**"
+                                "/api/v1/paintings/**",
+                                "/api/v1/scraps/**",
+                                "events/detect",
+                                "/chat/ask"
                         ).permitAll()
-
-                        // mock-detect는 인증 필요(Principal 써서 개인 큐로 보내기 때문)
-                        .requestMatchers(HttpMethod.POST, "/api/v1/events/mock-detect").authenticated()
-
-                        // 필요시 paintings는 인증 필요로 두는 걸 권장(지금은 전부 허용돼 있었음)
-                        .requestMatchers("/api/v1/paintings/**").authenticated()
 
                         // 그 외는 인증
                         .anyRequest().authenticated()
