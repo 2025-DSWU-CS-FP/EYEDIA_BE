@@ -101,4 +101,11 @@ public class AuthService {
 
     }
 
+    public void updateLoginId(long uid, String loginId) {
+        userRepository.updateLoginId(uid, loginId);
+    }
+
+    public void updateNickName(long uid, String nickname) {
+        userRepository.updateNickname(uid, nickname);
+    }
 }
