@@ -4,6 +4,7 @@ import com.eyedia.eyedia.dto.UserDTO;
 import com.eyedia.eyedia.global.ApiResponse;
 import com.eyedia.eyedia.service.impl.AuthService;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,4 +31,34 @@ public class UserController {
         return ApiResponse.onSuccess(userInfo);
 
     }
+
+    // 유저 정보 변경
+
+    // 아이디 변경
+    @PostMapping("/me/login-id")
+    public ApiResponse<?> updateLoginId(
+            @Schema(hidden = true) @AuthenticationPrincipal String userId,
+            @RequestBody @Valid UserDTO.UpdateLoginIdRequest request
+
+    ) {
+        var uid = Long.parseLong(userId);
+        authService.updateLoginId(uid, request.getLoginId());
+        return ApiResponse.onSuccessWithoutResult();
+
+    }
+
+    // 닉네임 변경
+    @PostMapping("/me/nickname")
+    public ApiResponse<?> updateNickName(
+            @Schema(hidden = true) @AuthenticationPrincipal String userId,
+            @RequestBody @Valid UserDTO.UpdateNickNamequest request
+
+    ) {
+        var uid = Long.parseLong(userId);
+        authService.updateNickName(uid, request.getNickname());
+        return ApiResponse.onSuccessWithoutResult();
+    }
+
+    // 비밀번호 변경
+
 }
