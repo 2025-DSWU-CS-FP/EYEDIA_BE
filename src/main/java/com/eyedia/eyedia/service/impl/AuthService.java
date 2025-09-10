@@ -108,4 +108,8 @@ public class AuthService {
     public void updateNickName(long uid, String nickname) {
         userRepository.updateNickname(uid, nickname);
     }
+
+    public void updatePassWord(long uid, String passWord) {
+        userRepository.updatePassWord(uid, passWord);
+    }
 }

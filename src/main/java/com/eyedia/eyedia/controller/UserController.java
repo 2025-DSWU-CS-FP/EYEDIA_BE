@@ -60,5 +60,15 @@ public class UserController {
     }
 
     // 비밀번호 변경
+    @PostMapping("/me/pw")
+    public ApiResponse<?> updatePassword(
+            @Schema(hidden = true) @AuthenticationPrincipal String userId,
+            @RequestBody @Valid UserDTO.UpdatePassWorddRequest request
+
+    ) {
+        var uid = Long.parseLong(userId);
+        authService.updatePassWord(uid, request.getPassword());
+        return ApiResponse.onSuccessWithoutResult();
+    }
 
 }
