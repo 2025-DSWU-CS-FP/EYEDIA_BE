@@ -38,10 +38,11 @@ public enum ErrorStatus implements BaseErrorCode {
     // 사용자 관련
     USER_NOT_FOUND(HttpStatus.BAD_REQUEST, "USER404", "해당하는 유저 정보가 없습니다."),
     WRONG_PASSWORD(HttpStatus.BAD_REQUEST, "USER403", "비밀번호가 틀렸습니다."),
+    ALREADY_USER_PASSWORD_SAME(HttpStatus.BAD_REQUEST, "USER408", "비밀번호가 틀렸습니다."),
     ALREADY_USER_ID_EXISTS(HttpStatus.BAD_REQUEST, "USER401", "이미 존재하는 아이디입니다."),
     ALREADY_USER_ID_SAME(HttpStatus.BAD_REQUEST, "USER406", "사용자의 아이디와 동일합니다."),
     ALREADY_USER_NAME_EXISTS(HttpStatus.BAD_REQUEST, "USER405", "이미 존재하는 닉네임입니다."),
-    ALREADY_USER_NAME_SAME(HttpStatus.BAD_REQUEST, "USER405", "사용자의 닉네임과 동일합니다."),
+    ALREADY_USER_NAME_SAME(HttpStatus.BAD_REQUEST, "USER407", "사용자의 비밀번호와 동일합니다."),
 
     // 즐겨찾기 관련
     ALREADY_BOOKMARK_EXISTS(HttpStatus.BAD_REQUEST, "BOOKMARK405", "이미 즐겨찾기되었습니다."),

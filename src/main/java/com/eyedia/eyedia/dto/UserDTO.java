@@ -3,6 +3,7 @@ package com.eyedia.eyedia.dto;
 import com.eyedia.eyedia.global.validation.annotation.CheckLoginId;
 import com.eyedia.eyedia.global.validation.annotation.CheckNickName;
 import com.eyedia.eyedia.global.validation.annotation.CheckPassWord;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -54,12 +55,14 @@ public class UserDTO {
     }
 
     @Getter
+    @CheckPassWord(password = "password", confirmPassword = "confirmPassword")
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
     public static class UpdatePassWorddRequest {
 
-        @CheckPassWord
+        @NotBlank(message = "비밀번호는 필수입니다.")
         private String password;
-        private String verify_password;
+        @NotBlank(message = "비밀번호 확인은 필수입니다.")
+        private String confirmPassword;
 
     }
 }
