@@ -52,6 +52,7 @@ jobs:
           S3_REGION : ${{ secrets.S3_REGION }}
           S3_ACCESSKEY : ${{ secrets.S3_ACCESSKEY }}
           S3_SECRETKEY : ${{ secrets.S3_SECRETKEY }}
+          OPENAI_API_KEY : ${{ secrets.OPENAI_API_KEY }}
 
       # Docker Build하고 DockerHub에 Push
       - name: Docker Build & Push to DockerHub

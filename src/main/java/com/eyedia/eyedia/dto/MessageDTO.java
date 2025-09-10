@@ -9,7 +9,11 @@ public class MessageDTO {
     @Getter
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
     public static class ChatImageResponseDTO {
-        private String url;
+        private String imgUrl;
+        private String title;
+        private String artist;
+        private String description;
+        private String exhibition;
         private Long artId;
     }
 
@@ -24,17 +28,19 @@ public class MessageDTO {
         private String timestamp;   // ISO 포맷 문자열
 
     }
-    @Builder
-    @Getter
-    @AllArgsConstructor(access = AccessLevel.PROTECTED)
-
-    public static class ModelResponseDTO {
-
-        @JsonProperty("full_image_id")
-        private String fullImageId;
-
-        @JsonProperty("object_description")
-        private String objectDescription;
+    @Getter @Setter @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class AskRequest {
+        private String artId;   // 채팅 방 자동 분리에 사용할 키
+        private String text;  // 사용자가 보낸 메시지
     }
-
+    @Getter @Setter @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ChatAnswerDTO {
+        private String artId;
+        private String answer; // LLM 도슨트 톤 답변
+        private String model;  // (옵션) 모델명
+    }
 }

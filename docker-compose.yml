@@ -16,6 +16,7 @@ services:
       S3_REGION: ${S3_REGION}
       S3_ACCESSKEY: ${S3_ACCESSKEY}
       S3_SECRETKEY: ${S3_SECRETKEY}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
     networks:
       - my_network
 
