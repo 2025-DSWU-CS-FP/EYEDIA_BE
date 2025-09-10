@@ -57,7 +57,7 @@ public class UserDTO {
     @Getter
     @CheckPassWord(password = "password", confirmPassword = "confirmPassword")
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
-    public static class UpdatePassWorddRequest {
+    public static class UpdatePassWordRequest {
 
         @NotBlank(message = "비밀번호는 필수입니다.")
         private String password;

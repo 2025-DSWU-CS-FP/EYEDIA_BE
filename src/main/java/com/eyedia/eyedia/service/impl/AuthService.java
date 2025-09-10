@@ -110,6 +110,6 @@ public class AuthService {
     }
 
     public void updatePassWord(long uid, String passWord) {
-        userRepository.updatePassWord(uid, passWord);
+        userRepository.updatePassWord(uid, passwordEncoder.encode(passWord));
     }
 }

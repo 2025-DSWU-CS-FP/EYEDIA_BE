@@ -63,7 +63,7 @@ public class UserController {
     @PostMapping("/me/pw")
     public ApiResponse<?> updatePassword(
             @Schema(hidden = true) @AuthenticationPrincipal String userId,
-            @RequestBody @Valid UserDTO.UpdatePassWorddRequest request
+            @RequestBody @Valid UserDTO.UpdatePassWordRequest request
 
     ) {
         var uid = Long.parseLong(userId);

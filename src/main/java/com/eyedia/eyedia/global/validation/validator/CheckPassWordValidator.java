@@ -1,5 +1,6 @@
 package com.eyedia.eyedia.global.validation.validator;
 
+import com.eyedia.eyedia.dto.UserDTO;
 import com.eyedia.eyedia.global.error.status.ErrorStatus;
 import com.eyedia.eyedia.global.validation.annotation.CheckPassWord;
 import com.eyedia.eyedia.repository.UserRepository;
@@ -8,23 +9,18 @@ import jakarta.validation.ConstraintValidatorContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import java.lang.reflect.Field;
 
 @Component
 @RequiredArgsConstructor
 public class CheckPassWordValidator implements ConstraintValidator<CheckPassWord, Object> {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     // Field로 사용
-    private String passwordField;
-    private String confirmPasswordField;
-    // 초기화하여 변수 여러개를 받아와야 함
-    @Override
-    public void initialize(CheckPassWord constraintAnnotation) {
-        this.passwordField = constraintAnnotation.password();
-        this.confirmPasswordField = constraintAnnotation.confirmPassword();
-    }
+    private String passValue;
+    private String confirmValue;
 
     public boolean isValid(Object value, ConstraintValidatorContext context) {
         if (value == null) return true;
@@ -37,35 +33,35 @@ public class CheckPassWordValidator implements ConstraintValidator<CheckPassWord
         Long currentUserId = Long.parseLong(userDetails);
 
         try {
-            Field password = value.getClass().getDeclaredField(passwordField);
-            Field confirmPassword = value.getClass().getDeclaredField(confirmPasswordField);
+            if (value instanceof UserDTO.UpdatePassWordRequest dto) {
+                passValue = dto.getPassword();
+                confirmValue = dto.getConfirmPassword();
+            }
 
-            password.setAccessible(true);
-            confirmPassword.setAccessible(true);
-
-            // dto 값을 꺼내온다
-            Object passValue = password.get(value);
-            Object confirmValue = confirmPassword.get(value);
-
-            if(!password.equals(confirmPassword)) {
+            // 비밀번호와 확인비밀번호가 같은 지 확인
+            if(!passValue.equals(confirmValue)) {
                 context.disableDefaultConstraintViolation();
-                context.buildConstraintViolationWithTemplate(ErrorStatus.WRONG_PASSWORD.getMessage())
+                context.buildConstraintViolationWithTemplate(ErrorStatus.WRONG_PASSWORD.name())
                         .addConstraintViolation();
                 return false;
 
             }
             // 이미 같은 비밀번호 일 시
-            if(userRepository.getUserByUsersId(currentUserId).equals(passwordField)) {
+            // 입력한_평문_비밀번호, DB에_저장된_암호화된_비밀번호 순으로
+            if(passwordEncoder.matches(passValue, userRepository.getUserByUsersId(currentUserId).getPw())) {
                 context.disableDefaultConstraintViolation();
-                context.buildConstraintViolationWithTemplate(ErrorStatus.ALREADY_USER_PASSWORD_SAME.getMessage())
+                context.buildConstraintViolationWithTemplate(ErrorStatus.ALREADY_USER_PASSWORD_SAME.name())
                         .addConstraintViolation();
                 return false;
 
             }
 
-            return passValue.equals(confirmValue);
+            return true;
         } catch (Exception e) {
-            return false; // 필드 못 찾거나 예외 발생 시 invalid
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate("비밀번호 검증 중 서버 오류가 발생했습니다.")
+                    .addConstraintViolation();
+            return false;
         }
     }
 }
