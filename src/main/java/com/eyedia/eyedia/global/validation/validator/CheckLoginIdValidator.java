@@ -32,7 +32,7 @@ public class CheckLoginIdValidator implements ConstraintValidator<CheckLoginId, 
         boolean isExists = userRepository.existsByIdAndUsersIdNot(loginId, currentUserId);
         if (isExists) {
             context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate(ErrorStatus.ALREADY_USER_ID_EXISTS.getMessage())
+            context.buildConstraintViolationWithTemplate(ErrorStatus.ALREADY_USER_ID_EXISTS.name())
                     .addConstraintViolation();
             return false;
 
@@ -40,7 +40,7 @@ public class CheckLoginIdValidator implements ConstraintValidator<CheckLoginId, 
         boolean isEquals = userRepository.existsByIdAndUsersId(loginId, currentUserId);
         if(isEquals) {
             context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate(ErrorStatus.ALREADY_USER_ID_SAME.getMessage())
+            context.buildConstraintViolationWithTemplate(ErrorStatus.ALREADY_USER_ID_SAME.name())
                     .addConstraintViolation();
             return false;
         }
