@@ -8,6 +8,7 @@ import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -25,12 +26,42 @@ public class ExceptionAdvice {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     protected ResponseEntity<?> handleMethodArgumentNotValid(MethodArgumentNotValidException e) {
         Map<String, String> errors = new HashMap<>();
+        String errorCode = ErrorStatus._BAD_REQUEST.getCode(); // 기본값
+        String errorMessage = ErrorStatus._BAD_REQUEST.getMessage();
+        ErrorStatus resolved = null; // 처음에 생긴 예외를 처리
+
         for (FieldError fieldError : e.getBindingResult().getFieldErrors()) {
-            errors.put(fieldError.getField(), fieldError.getDefaultMessage());
+            String msg = fieldError.getDefaultMessage();
+
+            ErrorStatus status = ErrorStatus.fromCode(msg); // ← name으로 매핑
+            if (status != null) {
+                if(resolved == null) {
+                    errorCode = status.getCode();
+                    errorMessage = status.getMessage();
+                    resolved = status;
+                }
+                errors.put(fieldError.getField(), status.getMessage());
+            } else {
+                errors.put(fieldError.getField(), msg); // 일반 메시지
+            }
         }
+
+        for (ObjectError globalError : e.getBindingResult().getGlobalErrors()) {
+            String msg = globalError.getDefaultMessage();
+
+            ErrorStatus status = ErrorStatus.fromCode(msg);
+            if (status != null) {
+                errorCode = status.getCode();
+                errorMessage = status.getMessage();
+                errors.put(globalError.getObjectName(), status.getMessage());
+            } else {
+                errors.put(globalError.getObjectName(), msg);
+            }
+        }
+
         return ResponseEntity
                 .badRequest()
-                .body(ApiResponse.onFailure(ErrorStatus._BAD_REQUEST.getCode(), "Validation Error", errors));
+                .body(ApiResponse.onFailure(errorCode, errorMessage, errors));
     }
 
     /**
