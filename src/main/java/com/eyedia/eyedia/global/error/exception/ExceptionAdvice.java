@@ -28,14 +28,18 @@ public class ExceptionAdvice {
         Map<String, String> errors = new HashMap<>();
         String errorCode = ErrorStatus._BAD_REQUEST.getCode(); // 기본값
         String errorMessage = ErrorStatus._BAD_REQUEST.getMessage();
+        ErrorStatus resolved = null; // 처음에 생긴 예외를 처리
 
         for (FieldError fieldError : e.getBindingResult().getFieldErrors()) {
             String msg = fieldError.getDefaultMessage();
 
             ErrorStatus status = ErrorStatus.fromCode(msg); // ← name으로 매핑
             if (status != null) {
-                errorCode = status.getCode();
-                errorMessage = status.getMessage();
+                if(resolved == null) {
+                    errorCode = status.getCode();
+                    errorMessage = status.getMessage();
+                    resolved = status;
+                }
                 errors.put(fieldError.getField(), status.getMessage());
             } else {
                 errors.put(fieldError.getField(), msg); // 일반 메시지
