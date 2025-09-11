@@ -102,14 +102,23 @@ public class AuthService {
     }
 
     public void updateLoginId(long uid, String loginId) {
-        userRepository.updateLoginId(uid, loginId);
+        int updated = userRepository.updateLoginId(uid, loginId);
+        if(updated == 0) {
+            throw new GeneralException(ErrorStatus.USER_NOT_FOUND);
+        }
     }
 
     public void updateNickName(long uid, String nickname) {
-        userRepository.updateNickname(uid, nickname);
+        int updated = userRepository.updateNickname(uid, nickname);
+        if(updated == 0) {
+            throw new GeneralException(ErrorStatus.USER_NOT_FOUND);
+        }
     }
 
     public void updatePassWord(long uid, String passWord) {
-        userRepository.updatePassWord(uid, passwordEncoder.encode(passWord));
+        int updated = userRepository.updatePassWord(uid, passwordEncoder.encode(passWord));
+        if(updated == 0) {
+            throw new GeneralException(ErrorStatus.USER_NOT_FOUND);
+        }
     }
 }
