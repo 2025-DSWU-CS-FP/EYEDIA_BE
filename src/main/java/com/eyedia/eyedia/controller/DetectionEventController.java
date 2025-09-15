@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
-@RequestMapping("/events")
+@RequestMapping("/api/v1/events")
 @RequiredArgsConstructor
 
 public class DetectionEventController {
