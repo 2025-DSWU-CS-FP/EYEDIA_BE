@@ -8,6 +8,8 @@ import com.eyedia.eyedia.domain.User;
 import com.eyedia.eyedia.dto.MessageDTO;
 import com.eyedia.eyedia.dto.PaintingMetadataRequest;
 import com.eyedia.eyedia.dto.UserFacingDTO.PaintingConfirmResponse;
+import com.eyedia.eyedia.global.error.exception.GeneralException;
+import com.eyedia.eyedia.global.error.status.ErrorStatus;
 import com.eyedia.eyedia.repository.ExhibitionRepository;
 import com.eyedia.eyedia.repository.MessageRepository;
 import com.eyedia.eyedia.repository.PaintingRepository;
@@ -16,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -84,5 +87,11 @@ public class PaintingService {
                 .build();
 
         paintingRepository.save(painting);
+    }
+
+    public void deletePainting(Long paintingId) {
+        Painting painting = paintingRepository.findByObjectId(String.valueOf(paintingId))
+                .orElseThrow(() -> new GeneralException(ErrorStatus.PAINTING_NOT_FOUND));
+        paintingRepository.delete(painting);
     }
 }
