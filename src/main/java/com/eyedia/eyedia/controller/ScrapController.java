@@ -75,12 +75,12 @@ public class ScrapController {
                 """
     )
     public ResponseEntity<Page<ScrapResponseDto>> getMyScrapList(
-            @Parameter(hidden = true) @AuthenticationPrincipal String userId,
+            Principal principal,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int limit,
             @RequestParam(defaultValue = "recent") String sort
     ) {
-        Long uid = Long.parseLong(userId);
+        Long uid = Long.parseLong(principal.getName());
 
         Sort.Direction direction;
         String sortProperty = "date"; // 기본 정렬 컬럼

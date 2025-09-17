@@ -1,6 +1,7 @@
 package com.eyedia.eyedia.repository;
 
 import com.eyedia.eyedia.domain.Exhibition;
+import com.eyedia.eyedia.domain.enums.ExhibitionCategory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -49,5 +50,7 @@ public interface ExhibitionRepository extends JpaRepository<Exhibition, Long> {
     List<Exhibition> findByTitleContainingIgnoreCaseOrGalleryContainingIgnoreCase(
             String titlePart, String galleryPart, Pageable pageable
     );
+
+    List<Exhibition> findByCategoryOrderByVisitCountDesc(ExhibitionCategory category, Pageable pageable);
 
 }
