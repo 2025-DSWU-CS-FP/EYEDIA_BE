@@ -3,6 +3,7 @@ package com.eyedia.eyedia.domain;
 import com.eyedia.eyedia.domain.badge.Badge;
 import com.eyedia.eyedia.domain.badge.UserBadgeAward;
 import com.eyedia.eyedia.domain.common.BaseEntity;
+import com.eyedia.eyedia.domain.enums.ExhibitionCategory;
 import com.eyedia.eyedia.domain.enums.Gender;
 import com.eyedia.eyedia.domain.mapping.Bookmark;
 import com.eyedia.eyedia.domain.mapping.Visit;
@@ -66,6 +67,26 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserBadgeAward> userBadgeAwards = new ArrayList<>();
+
+    // --- 회원가입 시 선택한 이넘 키워드 보관 ---
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(
+            name = "user_selected_keywords",
+            joinColumns = @JoinColumn(name = "users_id") // FK 컬럼명 명시
+    )
+    @Enumerated(EnumType.STRING)
+    @Column(name = "keyword", length = 32, nullable = false)
+    @Builder.Default
+    private java.util.Set<ExhibitionCategory> selectedKeywords = new java.util.HashSet<>();
+
+    // 편의 메서드
+    public void setSelectedKeywords(java.util.Collection<ExhibitionCategory> keywords) {
+        this.selectedKeywords.clear();
+        if (keywords != null) this.selectedKeywords.addAll(keywords);
+    }
+    public void addKeyword(ExhibitionCategory k) { this.selectedKeywords.add(k); }
+    public void removeKeyword(ExhibitionCategory k) { this.selectedKeywords.remove(k); }
+
 
     public void setIsFirstLogin(boolean isFirstLogin) {
         this.isFirstLogin = isFirstLogin;

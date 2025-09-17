@@ -41,7 +41,7 @@ public class AuthService {
                 .pw(passwordEncoder.encode(dto.getPw()))
                 .currentLocation(dto.getCurrentLocation())
                 .build();
-
+        user.setSelectedKeywords(dto.getKeywords());
         userRepository.save(user);
     }
 
