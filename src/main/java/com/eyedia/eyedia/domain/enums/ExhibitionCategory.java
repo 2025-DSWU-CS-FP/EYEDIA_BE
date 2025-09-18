@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 
 @Getter
-@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum ExhibitionCategory {
     // 시대
     ANCIENT("고대/고전"),
