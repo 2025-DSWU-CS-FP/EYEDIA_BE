@@ -54,7 +54,7 @@ public class RecommendationService {
                     ).toList();
 
                     return RecommendedExhibitionsResponse.builder()
-                            .keyword(category.name())
+                            .keyword(category)
                             .exhibitions(items)
                             .build();
                 })
