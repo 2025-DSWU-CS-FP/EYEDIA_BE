@@ -69,9 +69,11 @@ public class PaintingController {
     public ResponseEntity<?> getChatMessages(@PathVariable Long chatRoomId) {
         return ResponseEntity.ok(paintingService.getChatMessagesByPaintingId(chatRoomId));
     }
-    @RequestMapping("/test")
-    public String testAPI(){
-        return "test";
-    }
 
+    @Operation(summary = "작품 삭제", description = "해당 그림의 objectId를 입력하면 삭제됩니다.")
+    @DeleteMapping("/{objectId}")
+    public ApiResponse<?> deletePainting(@PathVariable Long objectId) {
+        paintingService.deletePainting(objectId);
+        return ApiResponse.of(SuccessStatus._OK,null);
+    }
 }
