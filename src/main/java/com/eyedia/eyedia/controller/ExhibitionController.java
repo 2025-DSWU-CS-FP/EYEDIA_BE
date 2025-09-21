@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -173,6 +174,38 @@ public class ExhibitionController {
         exhibitionCommandService.deleteBookmarkVisitedExhibitionByUser(uid, exhibitionId);
         return ApiResponse.onSuccessWithoutResult();
 
+    }
+
+    @Operation(
+            summary = "내가 방문한 전시 개수 조회",
+            description = "JWT 토큰을 통해 로그인한 사용자가 지금까지 방문한 전시의 개수(중복 제외)를 반환합니다."
+    )
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "조회 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "잘못된 요청 (userId 누락 등)"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "인증 실패")
+    })
+    @GetMapping("/my/visited/count")
+    public ResponseEntity<CountResponse> getMyVisitedExhibitionCount(
+            @Schema(hidden = true) @AuthenticationPrincipal String userId
+    ) {
+
+        Long uid = Long.valueOf(userId);
+
+        long count = exhibitionService.getMyVisitedExhibitionCount(uid);
+        return ResponseEntity.ok(new CountResponse(count));
+    }
+
+    public static class CountResponse {
+        private long count;
+
+        public CountResponse(long count) {
+            this.count = count;
+        }
+
+        public long getCount() {
+            return count;
+        }
     }
 
 }

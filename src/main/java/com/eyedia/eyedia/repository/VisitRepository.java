@@ -11,6 +11,12 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalDateTime;
 
 public interface VisitRepository extends JpaRepository<Visit, Long> {
+
+    // 유저가 방문한 전시의 "개수" (중복 없이)
+    @Query("SELECT COUNT(DISTINCT v.exhibition.exhibitionsId) " +
+            "FROM Visit v WHERE v.user.usersId = :userId")
+    long countDistinctExhibitionsByUserId(@Param("userId") Long userId);
+
     // 사용자가 방문한 전시 목록 반환(distinct)
     @Query(
             value = """
