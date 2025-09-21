@@ -172,6 +172,8 @@ public class ExhibitionQueryService {
         return e.getStartDate().toLocalDate() + " ~ " + e.getEndDate().toLocalDate();
     }
 
-
-
+    public long getMyVisitedExhibitionCount(Long userId) {
+        if (userId == null) throw new IllegalArgumentException("userId must not be null");
+        return visitRepository.countDistinctExhibitionsByUserId(userId);
+    }
 }
