@@ -76,6 +76,7 @@ public class SecurityConfig {
                                 "/", "/health-check",
                                 "/api/v1/paintings/**",
                                 "/api/v1/scraps/**",
+                                "/tts/**",
                                 "/api/v1/events/detect",
                                 "/api/v1/chats/ask"
                         ).permitAll()

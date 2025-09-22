@@ -35,6 +35,7 @@ public class MessageDTO {
     public static class AskRequest {
         private String artId;   // 채팅 방 자동 분리에 사용할 키
         private String text;  // 사용자가 보낸 메시지
+        private String deviceId; // 젯슨 식별자 (프론트가 같이 보냄)
     }
     @Getter @Setter @Builder
     @NoArgsConstructor
@@ -43,5 +44,6 @@ public class MessageDTO {
         private String artId;
         private String answer; // LLM 도슨트 톤 답변
         private String model;  // (옵션) 모델명
+        private String audioUrl; // 선택: 프론트도 재생 가능
     }
 }

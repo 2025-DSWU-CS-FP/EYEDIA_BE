@@ -32,3 +32,10 @@ spring:
 logging:
   level:
     '[org.springframework.boot.web]': INFO
+
+eyedia:
+  tts:
+    storageBaseDir: ./data/cdn        # mp3 저장 폴더 (실서버는 /var/eyedia/cdn)
+    cdnBaseUrl: http://localhost:8080 # 정적 서빙되는 URL prefix
+    openaiApiKey: ${OPENAI_API_KEY}   # 환경변수나 secrets에서 불러오기
+    defaultVoice: alloy               # OpenAI 기본 보이스
