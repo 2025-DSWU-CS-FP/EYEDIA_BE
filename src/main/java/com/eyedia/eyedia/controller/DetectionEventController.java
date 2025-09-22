@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.security.Principal;
-
 @RestController
 @RequestMapping("/api/v1/events")
 @RequiredArgsConstructor
@@ -27,7 +25,7 @@ public class DetectionEventController {
     @PostMapping("/detect")
     public ResponseEntity<Void> detect(@RequestBody Long artId) {
 
-        var painting = paintingRepository.findByArtId(String.valueOf(artId))
+        var painting = paintingRepository.findByArtIdAndUser(String.valueOf(artId), null)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "painting not found"));
         var exhibition = exhibitionRepository.findByPaintingsPaintingId(painting.getPaintingId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "exhibition not found"));
@@ -35,7 +33,9 @@ public class DetectionEventController {
         messagingTemplate.convertAndSend(
                 "/queue/events",
                 MessageDTO.ChatImageResponseDTO.builder()
-                        .imgUrl("https://s3-eyedia.s3.ap-northeast-2.amazonaws.com/1/" + artId + "/" + artId)
+                        .paintingId(painting.getPaintingId())
+                        .imgUrl("https://s3-eyedia.s3.ap-northeast-2.amazonaws.com/"
+                                + exhibition.getExhibitionsId() + "/" + artId + "/" + artId + ".jpg")
                         .title(painting.getTitle())
                         .artist(painting.getArtist())
                         .description(painting.getDescription())
@@ -43,13 +43,6 @@ public class DetectionEventController {
                         .artId(artId)
                         .build()
         );
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("add-user")
-    public ResponseEntity<Void> addUser(Principal principal, Long paintingId) {
-        String userKey = principal.getName();
-        detect(paintingId);
         return ResponseEntity.ok().build();
     }
 }

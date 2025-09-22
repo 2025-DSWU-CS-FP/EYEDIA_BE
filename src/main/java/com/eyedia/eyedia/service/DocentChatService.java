@@ -20,7 +20,7 @@ public class DocentChatService {
     private final OpenAIClient openAI;
 
     public Answer answer(String objectId, String question) {
-        var p = paintingRepository.findByArtId(objectId)
+        var p = paintingRepository.findByArtIdAndUser(objectId, null)
                 .orElseThrow(() -> new IllegalArgumentException("invalid artId: " + objectId));
 
         String system = """
