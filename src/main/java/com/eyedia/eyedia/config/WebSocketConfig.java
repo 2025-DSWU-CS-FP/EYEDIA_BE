@@ -35,6 +35,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
         registry.setApplicationDestinationPrefixes("/app");
         registry.enableSimpleBroker("/topic", "/queue", "/room")
+                // topic이 그림을 받기 위해서 기본으로 연결되는 것
+                // room은 채팅방
                 .setTaskScheduler(ts)
                 .setHeartbeatValue(new long[]{10000, 10000});
     }

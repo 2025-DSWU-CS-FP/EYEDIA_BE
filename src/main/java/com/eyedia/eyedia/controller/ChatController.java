@@ -16,6 +16,7 @@ public class ChatController {
     @MessageMapping("/chat.sendMessage")
     public void sendMessage(@Payload MessageDTO.ChatMessageDTO m) {
         String topic = "/topic/chat/art/" + m.getPaintingId();
+//        Todo : String room = "/room/user-" + userId;로 수정
         messagingTemplate.convertAndSend(topic, m);
     }
 }

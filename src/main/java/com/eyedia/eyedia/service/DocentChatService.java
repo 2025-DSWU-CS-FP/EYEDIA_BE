@@ -20,7 +20,7 @@ public class DocentChatService {
     private final OpenAIClient openAI;
 
     public Answer answer(String objectId, String question) {
-        var p = paintingRepository.findByObjectId(objectId)
+        var p = paintingRepository.findByArtIdAndUser(objectId, null)
                 .orElseThrow(() -> new IllegalArgumentException("invalid artId: " + objectId));
 
         String system = """
@@ -75,6 +75,8 @@ public class DocentChatService {
                 .flatMap(content -> content.outputText().stream())
                 .map(t -> t.text())
                 .collect(Collectors.joining());
+
+        // Todo : Message에 DB 저장
 
         return new Answer(text, params.model().toString());
     }

@@ -47,6 +47,8 @@ public class DocentController {
                 .audioUrl(audioUrl)
                 .build();
 
+        // Todo : 메세지 DB 저장 (보내는 거 받는 거 모두) , 메세지에도 userId 저장, painting에도 userId 저장
+
         // ✅ 질문/답변 모두 같은 작품 채널로 브로드캐스트
         messagingTemplate.convertAndSend("/topic/chat/art/" + req.getArtId(), dto);
         return dto;

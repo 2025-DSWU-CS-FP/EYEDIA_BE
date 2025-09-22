@@ -42,8 +42,8 @@ public class Painting extends BaseEntity {
 
     private String background;
 
-    @Column(name = "object_id")
-    private String objectId;
+    @Column(name = "art_id")
+    private String artId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exhibitions_id")
@@ -56,7 +56,4 @@ public class Painting extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "users_id")
     private User user;
-
-    @Column(name = "art")
-    private Long artId;
 }

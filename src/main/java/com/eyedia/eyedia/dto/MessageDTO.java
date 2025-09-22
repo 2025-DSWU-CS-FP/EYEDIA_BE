@@ -9,6 +9,7 @@ public class MessageDTO {
     @Getter
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
     public static class ChatImageResponseDTO {
+        private Long paintingId;
         private String imgUrl;
         private String title;
         private String artist;

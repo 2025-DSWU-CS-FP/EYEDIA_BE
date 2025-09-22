@@ -9,7 +9,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class PaintingMetadataRequest {
 
-    private String objectId;
+    private String artId;
     private String title;
     private String artist;
     private String description;
