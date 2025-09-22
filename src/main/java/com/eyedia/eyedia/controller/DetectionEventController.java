@@ -25,9 +25,9 @@ public class DetectionEventController {
     private final ExhibitionRepository exhibitionRepository;
 
     @PostMapping("/detect")
-    public ResponseEntity<Void> detect(@RequestBody Long paintingId) {
+    public ResponseEntity<Void> detect(@RequestBody Long artId) {
 
-        var painting = paintingRepository.findByObjectId(String.valueOf(paintingId))
+        var painting = paintingRepository.findByArtId(String.valueOf(artId))
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "painting not found"));
         var exhibition = exhibitionRepository.findByPaintingsPaintingId(painting.getPaintingId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "exhibition not found"));
@@ -35,12 +35,12 @@ public class DetectionEventController {
         messagingTemplate.convertAndSend(
                 "/queue/events",
                 MessageDTO.ChatImageResponseDTO.builder()
-                        .imgUrl("https://s3-eyedia.s3.ap-northeast-2.amazonaws.com/1/" + paintingId + "/" + paintingId)
+                        .imgUrl("https://s3-eyedia.s3.ap-northeast-2.amazonaws.com/1/" + artId + "/" + artId)
                         .title(painting.getTitle())
                         .artist(painting.getArtist())
                         .description(painting.getDescription())
                         .exhibition(exhibition.getTitle())
-                        .artId(paintingId)
+                        .artId(artId)
                         .build()
         );
         return ResponseEntity.ok().build();
