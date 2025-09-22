@@ -40,10 +40,8 @@ public class Painting extends BaseEntity {
     @Column(name = "artist")
     private String artist;
 
-    private String background;
-
     @Column(name = "art_id")
-    private String artId;
+    private Long artId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exhibitions_id")

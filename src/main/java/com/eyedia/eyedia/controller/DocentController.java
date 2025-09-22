@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.UUID;
 
 @RestController
@@ -23,8 +24,8 @@ public class DocentController {
     private final DeviceTaskService deviceTaskService;
 
     @PostMapping("/ask")
-    public MessageDTO.ChatAnswerDTO ask(@RequestBody MessageDTO.AskRequest req) {
-        var answer = docentChatService.answer(req.getArtId(), req.getText());
+    public MessageDTO.ChatAnswerDTO ask(@RequestBody MessageDTO.AskRequest req, Principal principal) {
+        var answer = docentChatService.answer(req.getPaintingId(), req.getText());
         String audioUrl = ttsService.synthesizeAndGetUrl(answer.text(), "alloy");
 
         // 젯슨에 재생시키도록 작업 큐에 넣기 (폴링 A안)
@@ -41,16 +42,13 @@ public class DocentController {
 
         // 프론트로도 브로드캐스트
         var dto = MessageDTO.ChatAnswerDTO.builder()
-                .artId(req.getArtId())
+                .paintingId(req.getPaintingId())
                 .answer(answer.text())
                 .model(answer.model())
                 .audioUrl(audioUrl)
                 .build();
 
-        // Todo : 메세지 DB 저장 (보내는 거 받는 거 모두) , 메세지에도 userId 저장, painting에도 userId 저장
-
-        // ✅ 질문/답변 모두 같은 작품 채널로 브로드캐스트
-        messagingTemplate.convertAndSend("/topic/chat/art/" + req.getArtId(), dto);
+        messagingTemplate.convertAndSendToUser(principal.getName(),"/room/user-" + principal.getName(), dto);
         return dto;
     }
 }

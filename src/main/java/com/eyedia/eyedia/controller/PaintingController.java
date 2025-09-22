@@ -1,6 +1,7 @@
 package com.eyedia.eyedia.controller;
 
 import com.eyedia.eyedia.dto.PaintingMetadataRequest;
+import com.eyedia.eyedia.dto.UserFacingDTO;
 import com.eyedia.eyedia.global.ApiResponse;
 import com.eyedia.eyedia.global.error.status.SuccessStatus;
 import com.eyedia.eyedia.service.PaintingService;
@@ -27,11 +28,11 @@ public class PaintingController {
         return ApiResponse.of(SuccessStatus._OK,null);
     }
 
-//    @Operation(summary = "채팅방 생성", description = "사용자가 그림을 확인하고 채팅을 시작여부를 선택합니다.")
-//    @PostMapping("/{artId}/confirm")
-//    public ResponseEntity<PaintingConfirmResponse> confirmPainting(@PathVariable Long artId) {
-//        return ResponseEntity.ok(paintingService.confirmPainting(artId));
-//    }
+    @Operation(summary = "채팅방 생성", description = "사용자가 그림을 확인하고 채팅을 시작여부를 선택합니다.")
+    @PostMapping("/{paintingId}/confirm")
+    public ResponseEntity<UserFacingDTO.PaintingConfirmResponse> confirmPainting(@PathVariable Long paintingId) {
+        return ResponseEntity.ok(paintingService.confirmPainting(paintingId));
+    }
 
 //    @Operation(summary = "그림 설명 조회", description = "DB에서 그림에 대한 전체적인 설명을 조회합니다.")
 //    @GetMapping("/{paintingId}/db-description")
