@@ -1,11 +1,13 @@
 package com.eyedia.eyedia.controller;
 
 import com.eyedia.eyedia.domain.Painting;
+import com.eyedia.eyedia.dto.AreaDetectDTO;
 import com.eyedia.eyedia.dto.MessageDTO;
 import com.eyedia.eyedia.global.error.exception.GeneralException;
 import com.eyedia.eyedia.global.error.status.ErrorStatus;
 import com.eyedia.eyedia.repository.ExhibitionRepository;
 import com.eyedia.eyedia.repository.PaintingRepository;
+import com.eyedia.eyedia.service.DocentChatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +26,7 @@ public class DetectionEventController {
     private final SimpMessageSendingOperations messagingTemplate;
     private final PaintingRepository paintingRepository;
     private final ExhibitionRepository exhibitionRepository;
+    private final DocentChatService docentChatService;
 
     @PostMapping("/detect")
     public ResponseEntity<Void> detect(@RequestBody Long artId) {
