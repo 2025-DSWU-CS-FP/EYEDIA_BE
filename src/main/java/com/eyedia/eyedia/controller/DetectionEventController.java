@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.security.Principal;
+
 @RestController
 @RequestMapping("/api/v1/events")
 @RequiredArgsConstructor
@@ -31,7 +33,7 @@ public class DetectionEventController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "exhibition not found"));
 
         messagingTemplate.convertAndSend(
-                "/topic/detections",
+                "/queue/events",
                 MessageDTO.ChatImageResponseDTO.builder()
                         .imgUrl("https://s3-eyedia.s3.ap-northeast-2.amazonaws.com/1/" + paintingId + "/" + paintingId)
                         .title(painting.getTitle())
@@ -41,6 +43,13 @@ public class DetectionEventController {
                         .artId(paintingId)
                         .build()
         );
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("add-user")
+    public ResponseEntity<Void> addUser(Principal principal, Long paintingId) {
+        String userKey = principal.getName();
+        detect(paintingId);
         return ResponseEntity.ok().build();
     }
 }

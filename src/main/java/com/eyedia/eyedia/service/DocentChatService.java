@@ -76,6 +76,8 @@ public class DocentChatService {
                 .map(t -> t.text())
                 .collect(Collectors.joining());
 
+        // Todo : Message에 DB 저장
+
         return new Answer(text, params.model().toString());
     }
 
