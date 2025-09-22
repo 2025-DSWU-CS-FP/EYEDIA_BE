@@ -1,11 +1,17 @@
 package com.eyedia.eyedia.service;
 
+import com.eyedia.eyedia.domain.Message;
+import com.eyedia.eyedia.domain.enums.SenderType;
+import com.eyedia.eyedia.global.error.exception.GeneralException;
+import com.eyedia.eyedia.global.error.status.ErrorStatus;
+import com.eyedia.eyedia.repository.MessageRepository;
 import com.eyedia.eyedia.repository.PaintingRepository;
 import com.openai.client.OpenAIClient;
 import com.openai.models.ChatModel;
 import com.openai.models.responses.Response;
 import com.openai.models.responses.ResponseCreateParams;
 import com.openai.models.responses.ResponseInputItem;
+import com.openai.models.responses.ResponseOutputText;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,10 +24,19 @@ public class DocentChatService {
 
     private final PaintingRepository paintingRepository;
     private final OpenAIClient openAI;
+    private final MessageRepository messageRepository;
 
-    public Answer answer(String objectId, String question) {
-        var p = paintingRepository.findByArtIdAndUser(objectId, null)
-                .orElseThrow(() -> new IllegalArgumentException("invalid artId: " + objectId));
+    public Answer answer(Long paintingId, String question) {
+        var p = paintingRepository.findByPaintingId(paintingId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.PAINTING_NOT_FOUND));
+
+        Message q = Message.builder()
+                .sender(SenderType.USER)
+                .painting(p)
+                .content(question)
+                .build();
+
+        messageRepository.save(q);
 
         String system = """
             너는 미술관 도슨트야. 한국어로 친절하고 자연스럽게 설명해.
@@ -73,10 +88,15 @@ public class DocentChatService {
                 .flatMap(item -> item.message().stream())
                 .flatMap(msg -> msg.content().stream())
                 .flatMap(content -> content.outputText().stream())
-                .map(t -> t.text())
+                .map(ResponseOutputText::text)
                 .collect(Collectors.joining());
 
-        // Todo : Message에 DB 저장
+        Message a = Message.builder()
+                .sender(SenderType.ASSISTANT)
+                .painting(p)
+                .content(text)
+                .build();
+        messageRepository.save(a);
 
         return new Answer(text, params.model().toString());
     }

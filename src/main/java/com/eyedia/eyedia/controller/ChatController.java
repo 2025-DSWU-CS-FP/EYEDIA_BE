@@ -7,6 +7,8 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
+import java.security.Principal;
+
 @Controller
 @RequiredArgsConstructor
 public class ChatController {
@@ -14,9 +16,8 @@ public class ChatController {
     private final SimpMessagingTemplate messagingTemplate;
 
     @MessageMapping("/chat.sendMessage")
-    public void sendMessage(@Payload MessageDTO.ChatMessageDTO m) {
-        String topic = "/topic/chat/art/" + m.getPaintingId();
-//        Todo : String room = "/room/user-" + userId;로 수정
-        messagingTemplate.convertAndSend(topic, m);
+    public void sendMessage(@Payload MessageDTO.ChatMessageDTO m, Principal principal) {
+        String room = "/room/user-" + principal.getName();
+        messagingTemplate.convertAndSendToUser(principal.getName(),room, m);
     }
 }
