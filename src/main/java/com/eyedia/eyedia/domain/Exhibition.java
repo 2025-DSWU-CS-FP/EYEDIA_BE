@@ -40,8 +40,10 @@ public class Exhibition extends BaseEntity {
     private Integer visitCount;
     private String artist;
 
-    @Enumerated(EnumType.STRING)
-    private ExhibitionCategory category;
+     @Enumerated(EnumType.STRING)
+     private ExhibitionCategory category;
+
+   // private String category;
 
     private String location;
 
@@ -61,5 +63,6 @@ public class Exhibition extends BaseEntity {
 
     @OneToMany(mappedBy = "exhibition", cascade = CascadeType.ALL)
     private List<Visit> visits = new ArrayList<>();
+
 }
 

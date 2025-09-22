@@ -1,7 +1,10 @@
 package com.eyedia.eyedia.dto;
 
+import com.eyedia.eyedia.domain.enums.ExhibitionCategory;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -15,4 +18,5 @@ public class UserSignupDTO {
     private String pw;
     private String currentLocation;
 
+    private List<ExhibitionCategory> keywords;
 }

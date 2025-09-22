@@ -36,14 +36,14 @@ public class CheckNickNameValidator implements ConstraintValidator<CheckNickName
         boolean isExists = userRepository.existsByNameAndUsersIdNot(nickname, currentUserId);
         if (isExists) {
             context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate(ErrorStatus.ALREADY_USER_NAME_EXISTS.getMessage())
+            context.buildConstraintViolationWithTemplate(ErrorStatus.ALREADY_USER_NAME_EXISTS.name())
                     .addConstraintViolation();
             return false;
         }
         boolean isEquals = userRepository.existsByNameAndUsersId(nickname, currentUserId);
         if(isEquals) {
             context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate(ErrorStatus.ALREADY_USER_NAME_SAME.getMessage())
+            context.buildConstraintViolationWithTemplate(ErrorStatus.ALREADY_USER_NAME_SAME.name())
                     .addConstraintViolation();
             return false;
         }
