@@ -38,6 +38,16 @@ public class UserDTO {
         String id;
 
     }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class MeBriefResponseDTO {
+        private String loginId;  // User.id (로그인용)
+        private String nickname; // User.name (닉네임)
+    }
+
+
     @Getter
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
     public static class UpdateNickNamequest {

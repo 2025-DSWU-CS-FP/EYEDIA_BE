@@ -101,6 +101,17 @@ public class AuthService {
 
     }
 
+    @Transactional
+    public UserDTO.MeBriefResponseDTO getMyBrief(long uid) {
+        User user = userRepository.getUserByUsersId(uid);
+        if (user == null) throw new GeneralException(ErrorStatus.USER_NOT_FOUND);
+
+        return UserDTO.MeBriefResponseDTO.builder()
+                .loginId(user.getId())     // 로그인 아이디
+                .nickname(user.getName())  // 닉네임
+                .build();
+    }
+
     public void updateLoginId(long uid, String loginId) {
         int updated = userRepository.updateLoginId(uid, loginId);
         if(updated == 0) {

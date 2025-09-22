@@ -3,6 +3,7 @@ package com.eyedia.eyedia.controller;
 import com.eyedia.eyedia.dto.UserDTO;
 import com.eyedia.eyedia.global.ApiResponse;
 import com.eyedia.eyedia.service.impl.AuthService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -66,6 +67,20 @@ public class UserController {
         var uid = Long.parseLong(userId);
         authService.updatePassWord(uid, request.getPassword());
         return ApiResponse.onSuccessWithoutResult();
+    }
+
+    // 닉네임, 아이디 조회
+    @GetMapping("/me")
+    @Operation(
+            summary = "내 기본 정보(로그인ID/닉네임) 조회",
+            description = "로그인한 사용자의 로그인 아이디와 닉네임을 반환합니다."
+    )
+    public ApiResponse<UserDTO.MeBriefResponseDTO> getMyBrief(
+            @Schema(hidden = true) @AuthenticationPrincipal String userId
+    ) {
+        long uid = Long.parseLong(userId);
+        var res = authService.getMyBrief(uid);
+        return ApiResponse.onSuccess(res);
     }
 
 }
