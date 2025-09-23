@@ -1,4 +1,6 @@
-package com.eyedia.eyedia.service;
+package com.eyedia.eyedia.service.details;
+
+import com.eyedia.eyedia.domain.enums.Gender;
 
 public interface OAuth2UserInfo {
 

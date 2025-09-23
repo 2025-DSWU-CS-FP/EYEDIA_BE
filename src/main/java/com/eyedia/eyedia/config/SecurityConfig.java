@@ -3,6 +3,7 @@ package com.eyedia.eyedia.config;
 import com.eyedia.eyedia.config.jwt.JwtAuthenticationFilter;
 import com.eyedia.eyedia.config.jwt.JwtProvider;
 import com.eyedia.eyedia.service.CustomOAuth2UserService;
+import com.eyedia.eyedia.service.CustomOidcUserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -23,14 +24,17 @@ public class SecurityConfig {
 
     private final JwtProvider jwtProvider;
     private final CustomOAuth2UserService customOAuth2UserService;
+    private final CustomOidcUserService customOidcUserService;
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
 
     public SecurityConfig(JwtProvider jwtProvider,
                           CustomOAuth2UserService customOAuth2UserService,
+                          CustomOidcUserService customOidcUserService,
                           OAuth2SuccessHandler oAuth2SuccessHandler) {
 
         this.jwtProvider = jwtProvider;
         this.customOAuth2UserService = customOAuth2UserService;
+        this.customOidcUserService = customOidcUserService;
         this.oAuth2SuccessHandler = oAuth2SuccessHandler;
     }
 
@@ -98,7 +102,10 @@ public class SecurityConfig {
 
                 // 네이버 OAuth2 로그인 파이프라인
                 .oauth2Login(oauth -> oauth
-                        .userInfoEndpoint(ui -> ui.userService(customOAuth2UserService))
+                        .userInfoEndpoint(ui -> ui
+                                .userService(customOAuth2UserService)
+                                .oidcUserService(customOidcUserService)
+                        )
                         .successHandler(oAuth2SuccessHandler)
                 )
 

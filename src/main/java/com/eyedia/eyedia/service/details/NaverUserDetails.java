@@ -1,5 +1,6 @@
-package com.eyedia.eyedia.service;
+package com.eyedia.eyedia.service.details;
 
+import com.eyedia.eyedia.domain.enums.Gender;
 import lombok.AllArgsConstructor;
 
 import java.util.Map;

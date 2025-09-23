@@ -4,6 +4,7 @@ import com.eyedia.eyedia.domain.User;
 import com.eyedia.eyedia.domain.common.AgeUtil;
 import com.eyedia.eyedia.domain.enums.Gender;
 import com.eyedia.eyedia.repository.UserRepository;
+import com.eyedia.eyedia.service.details.NaverUserDetails;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
