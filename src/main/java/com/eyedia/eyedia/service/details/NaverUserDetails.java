@@ -28,7 +28,7 @@ public class NaverUserDetails implements OAuth2UserInfo {
     @Override
     public String getGender(){
         String g = (String) ((Map) attributes.get("response")).get("gender");
-        if (g == null) return null;
+        if (g == null) return "NON";
 
         return switch (g.toUpperCase()){
             case "M" -> "MALE";

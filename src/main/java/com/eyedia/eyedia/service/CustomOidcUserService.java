@@ -36,7 +36,6 @@ public class CustomOidcUserService extends OidcUserService {
 
         // 1) 구글 표준 OIDC 사용자 로드
         OidcUser oidcUser = super.loadUser(userRequest);
-        log.info("[OAuth] attributes = {}", oidcUser.getAttributes()); // response 맵 확인
         Map<String, Object> claims = oidcUser.getClaims(); // "sub", "name", "email", "picture" 등
         String sub = (String) claims.get("sub");
 

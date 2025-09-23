@@ -46,7 +46,7 @@ public class User extends BaseEntity {
     private String currentLocation;
 
     // 소셜 고유키 (provider + providerId 조합이 유니크)
-    @Column(unique = true, nullable = false)
+    @Column(unique = true)
     private String oauthKey; // e.g., "naver:abcd1234"
 
     private String provider;      // "naver"

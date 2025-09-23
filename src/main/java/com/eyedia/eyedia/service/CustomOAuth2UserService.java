@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.time.ZoneId;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 @Service
@@ -35,7 +36,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 userRequest.getClientRegistration().getRegistrationId()); // naver
 
         OAuth2User raw = super.loadUser(userRequest);
-        log.info("[OAuth] attributes = {}", raw.getAttributes()); // response 맵 확인
 
         Map<String, Object> attributes = raw.getAttributes();
 
@@ -47,7 +47,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         String loginId = provider + "_" + providerId;
         String name = n.getName();
-        Gender gender = Gender.valueOf(n.getGender());
+        Gender gender = parseGender(n.getGender());
         Integer birthYear = n.getBirthYear();
         Integer age = AgeUtil.fromBirthYear(birthYear, ZoneId.of("Asia/Seoul"));
 
@@ -77,5 +77,13 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         List<GrantedAuthority> authorities =
                 Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
         return new DefaultOAuth2User(authorities, attributes, "response");
+    }
+
+    private Gender parseGender(String g) {
+        if (g == null) return null;
+        String s = g.trim().toUpperCase(Locale.ROOT);
+        if ("M".equals(s) || "MALE".equals(s)) return Gender.MALE;
+        if ("F".equals(s) || "FEMALE".equals(s)) return Gender.FEMALE;
+        return null; // treat "U"/others as unknown
     }
 }

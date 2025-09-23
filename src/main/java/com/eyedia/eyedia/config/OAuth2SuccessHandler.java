@@ -75,9 +75,9 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
         // 5) JWT는 숫자 PK(subject)로 발급 → parseLong 문제 방지
         String token = jwtProvider.generateToken(user.getUsersId());
-        log.info("<UNK> <UNK> <UNK> <UNK> <UNK>: {}", token);
+        log.debug("[OAuth] JWT issued for usersId={}", user.getUsersId());
 
-        String redirectUrl = successRedirect + "?token=" + URLEncoder.encode(token, StandardCharsets.UTF_8);
+        String redirectUrl = successRedirect + "#token=" + URLEncoder.encode(token, StandardCharsets.UTF_8);
         response.sendRedirect(redirectUrl);
     }
 }
