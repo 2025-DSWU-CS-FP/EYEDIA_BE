@@ -2,6 +2,8 @@ package com.eyedia.eyedia.config;
 
 import com.eyedia.eyedia.config.jwt.JwtAuthenticationFilter;
 import com.eyedia.eyedia.config.jwt.JwtProvider;
+import com.eyedia.eyedia.service.CustomOAuth2UserService;
+import com.eyedia.eyedia.service.CustomOidcUserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -21,9 +23,19 @@ import java.util.List;
 public class SecurityConfig {
 
     private final JwtProvider jwtProvider;
+    private final CustomOAuth2UserService customOAuth2UserService;
+    private final CustomOidcUserService customOidcUserService;
+    private final OAuth2SuccessHandler oAuth2SuccessHandler;
 
-    public SecurityConfig(JwtProvider jwtProvider) {
+    public SecurityConfig(JwtProvider jwtProvider,
+                          CustomOAuth2UserService customOAuth2UserService,
+                          CustomOidcUserService customOidcUserService,
+                          OAuth2SuccessHandler oAuth2SuccessHandler) {
+
         this.jwtProvider = jwtProvider;
+        this.customOAuth2UserService = customOAuth2UserService;
+        this.customOidcUserService = customOidcUserService;
+        this.oAuth2SuccessHandler = oAuth2SuccessHandler;
     }
 
     // Spring Security가 인식하는 CORS 설정
@@ -78,12 +90,25 @@ public class SecurityConfig {
                                 "/api/v1/scraps/**",
                                 "/tts/**",
                                 "/api/v1/events/detect",
-                                "/api/v1/chats/ask"
+                                "/api/v1/chats/ask",
+
+                                // OAuth2 로그인 경로 허용
+                                "/oauth2/**", "/login/oauth2/**", "/oauth2/authorization/**"
                         ).permitAll()
 
                         // 그 외는 인증
                         .anyRequest().authenticated()
                 )
+
+                // 네이버 OAuth2 로그인 파이프라인
+                .oauth2Login(oauth -> oauth
+                        .userInfoEndpoint(ui -> ui
+                                .userService(customOAuth2UserService)
+                                .oidcUserService(customOidcUserService)
+                        )
+                        .successHandler(oAuth2SuccessHandler)
+                )
+
                 .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

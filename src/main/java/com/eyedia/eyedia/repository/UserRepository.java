@@ -26,6 +26,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Boolean existsByIdAndUsersId(String id, Long currentUserId);
 
+    Optional<User> findByOauthKey(String oauthKey);
+
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("update User u set u.id = :loginId where u.usersId = :usersId")
     int updateLoginId(@Param("usersId") Long usersId, @Param("loginId") String loginId);

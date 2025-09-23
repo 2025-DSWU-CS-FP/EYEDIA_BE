@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter
+@Getter @Setter
 @DynamicUpdate
 @DynamicInsert
 @Builder
@@ -40,10 +40,17 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private String id; // 로그인 ID
 
-    @Column(nullable = false)
+    // @Column(nullable = true)
     private String pw;
 
     private String currentLocation;
+
+    // 소셜 고유키 (provider + providerId 조합이 유니크)
+    @Column(unique = true)
+    private String oauthKey; // e.g., "naver:abcd1234"
+
+    private String provider;      // "naver"
+    private String providerId;    // 네이버의 id
 
     @Builder.Default
     private boolean isFirstLogin = true;
