@@ -1,6 +1,7 @@
 package com.eyedia.eyedia.service;
 
 import com.eyedia.eyedia.domain.Message;
+import com.eyedia.eyedia.domain.Painting;
 import com.eyedia.eyedia.domain.enums.SenderType;
 import com.eyedia.eyedia.global.error.exception.GeneralException;
 import com.eyedia.eyedia.global.error.status.ErrorStatus;
@@ -26,17 +27,7 @@ public class DocentChatService {
     private final OpenAIClient openAI;
     private final MessageRepository messageRepository;
 
-    public Answer answer(Long paintingId, String question) {
-        var p = paintingRepository.findByPaintingId(paintingId)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.PAINTING_NOT_FOUND));
-
-        Message q = Message.builder()
-                .sender(SenderType.USER)
-                .painting(p)
-                .content(question)
-                .build();
-
-        messageRepository.save(q);
+    public Prompt basePrompt(Painting p, String question){
 
         String system = """
             너는 미술관 도슨트야. 한국어로 친절하고 자연스럽게 설명해.
@@ -58,6 +49,17 @@ public class DocentChatService {
                 "메트로폴리탄 미술관", nz(p.getDescription()),
                 nz(question)
         );
+
+        return new Prompt(system, user);
+    }
+
+//    public Prompt gazeAreaPrompt(Painting p, String quadrant, String question){
+//        return new Prompt();
+//    }
+
+    public Answer answer(Prompt prompt) {
+        var system = prompt.system();
+        var user = prompt.user();
 
         // ✅ Responses API의 입력은 ResponseInputItem으로 메시지 역할/내용을 지정
         List<ResponseInputItem> inputs = List.of(
@@ -91,17 +93,11 @@ public class DocentChatService {
                 .map(ResponseOutputText::text)
                 .collect(Collectors.joining());
 
-        Message a = Message.builder()
-                .sender(SenderType.ASSISTANT)
-                .painting(p)
-                .content(text)
-                .build();
-        messageRepository.save(a);
-
         return new Answer(text, params.model().toString());
     }
 
     private static String nz(String s){ return s == null ? "" : s; }
 
+    public record Prompt(String system, String user) {}
     public record Answer(String text, String model) {}
 }

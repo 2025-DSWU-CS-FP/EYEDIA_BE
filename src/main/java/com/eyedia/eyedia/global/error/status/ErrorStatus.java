@@ -16,6 +16,7 @@ public enum ErrorStatus implements BaseErrorCode {
     // 그림(Painting) 관련
     PAINTING_NOT_FOUND(HttpStatus.NOT_FOUND, "PAINTING404", "그림을 찾을 수 없습니다."),
     INVALID_PAINTING_ID(HttpStatus.BAD_REQUEST, "PAINTING400", "잘못된 그림 ID입니다."),
+    PAINTING_CONFLICT(HttpStatus.CONFLICT, "PAINTING409", "그림의 결과값이 여러개 입니다."),
 
     // 설명(description) 관련
     ARTIST_NOT_FOUND(HttpStatus.NOT_FOUND, "ARTIST404", "작가 정보를 찾을 수 없습니다."),
