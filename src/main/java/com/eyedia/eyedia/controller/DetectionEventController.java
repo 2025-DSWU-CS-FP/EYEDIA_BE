@@ -80,6 +80,10 @@ public class DetectionEventController {
 
         List<Painting> paintings = paintingRepository.findByArtId(request.getArtId());
 
+        if (paintings == null || paintings.isEmpty()) {
+            throw new GeneralException(ErrorStatus.PAINTING_NOT_FOUND);
+        }
+
         var answer = docentChatService.answer(
                 docentChatService.gazeAreaPrompt(
                         paintings.get(0).getTitle(),
