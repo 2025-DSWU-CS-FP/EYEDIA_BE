@@ -67,10 +67,10 @@ public class PaintingService {
 //    }
 
     public Long saveMetadata(PaintingMetadataRequest request) {
-        Exhibition exhibition = exhibitionRepository.findByTitle(request.getExhibition())
+        Exhibition exhibition = exhibitionRepository.findById(request.getExhibition())
                 .orElseGet(() -> exhibitionRepository.save(
                         Exhibition.builder()
-                                .title(request.getExhibition())
+                                .exhibitionsId(request.getExhibition())
                                 .build()
                 ));
 

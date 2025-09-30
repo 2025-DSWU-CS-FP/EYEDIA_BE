@@ -13,6 +13,6 @@ public class PaintingMetadataRequest {
     private String title;
     private String artist;
     private String description;
-    private String exhibition;
+    private Long exhibition;
     private String imageUrl;
 }

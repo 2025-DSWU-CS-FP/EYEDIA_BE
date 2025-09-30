@@ -90,6 +90,7 @@ public class SecurityConfig {
                                 "/api/v1/scraps/**",
                                 "/tts/**",
                                 "/api/v1/events/detect",
+                                "/api/v1/events/detect-area",
                                 "/api/v1/chats/ask",
 
                                 // OAuth2 로그인 경로 허용
