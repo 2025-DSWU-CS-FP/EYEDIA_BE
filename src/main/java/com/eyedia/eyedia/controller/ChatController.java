@@ -17,7 +17,7 @@ public class ChatController {
 
     @MessageMapping("/chat.sendMessage")
     public void sendMessage(@Payload MessageDTO.ChatMessageDTO m, Principal principal) {
-        String room = "/room/user-" + principal.getName();
+        String room = "/room/" + m.getPaintingId();
         messagingTemplate.convertAndSendToUser(principal.getName(),room, m);
     }
 }

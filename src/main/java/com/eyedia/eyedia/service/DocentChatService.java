@@ -53,9 +53,26 @@ public class DocentChatService {
         return new Prompt(system, user);
     }
 
-//    public Prompt gazeAreaPrompt(Painting p, String quadrant, String question){
-//        return new Prompt();
-//    }
+    public Prompt gazeAreaPrompt(String paintingTitle, String quadrant, String description){
+        String system = """
+                당신은 미술관의 도슨트입니다.\s
+                관람객에게 친절하고 감성적인 어조로 작품 속 객체를 설명해야 합니다.\s
+                너무 기술적이거나 딱딱하지 않게 풀어주세요.\s
+                그림에 없는 내용은 설명하지 말고, 해당 그림 외의 다른 그림은 언급하지 마세요.\s
+                작품 전체 설명보다는 각 객체에 대한 설명을 중심으로 해설해주세요.
+            """;
+
+        String user = """
+                아래는 %s 그림의 %s 분면에서 감지된 후보 객체 설명입니다: \s
+                %s\s
+                → 위의 내용을 바탕으로 관람객에게 설명을 작성해주세요.
+            """.formatted(
+                nz(paintingTitle), nz(quadrant),
+                nz(description)
+        );
+
+        return new Prompt(system, user);
+    }
 
     public Answer answer(Prompt prompt) {
         var system = prompt.system();

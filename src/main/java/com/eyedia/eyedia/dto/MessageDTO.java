@@ -45,6 +45,7 @@ public class MessageDTO {
         private Long paintingId;
         private String answer; // LLM 도슨트 톤 답변
         private String model;  // (옵션) 모델명
+        private String imgUrl;
         private String audioUrl; // 선택: 프론트도 재생 가능
     }
 }

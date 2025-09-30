@@ -84,9 +84,15 @@ public class ExceptionAdvice {
     @ExceptionHandler(GeneralException.class)
     protected ResponseEntity<?> handleGeneralException(GeneralException e) {
         ErrorReasonDTO reason = e.getErrorReasonHttpStatus();
+        Object data = e.getData();
+
         return ResponseEntity
                 .status(reason.getHttpStatus())
-                .body(ApiResponse.onFailure(reason.getCode(), reason.getMessage(), null));
+                .body(ApiResponse.onFailure(
+                        reason.getCode(),
+                        reason.getMessage(),
+                        data
+                ));
     }
 
     /**

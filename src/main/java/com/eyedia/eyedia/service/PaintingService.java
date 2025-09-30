@@ -67,10 +67,10 @@ public class PaintingService {
 //    }
 
     public Long saveMetadata(PaintingMetadataRequest request) {
-        Exhibition exhibition = exhibitionRepository.findByTitle(request.getExhibition())
+        Exhibition exhibition = exhibitionRepository.findById(request.getExhibition())
                 .orElseGet(() -> exhibitionRepository.save(
                         Exhibition.builder()
-                                .title(request.getExhibition())
+                                .exhibitionsId(request.getExhibition())
                                 .build()
                 ));
 
@@ -91,6 +91,9 @@ public class PaintingService {
     public void deletePainting(Long paintingId) {
         Painting painting = paintingRepository.findByPaintingId(paintingId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.PAINTING_NOT_FOUND));
+        if(painting.getMessages() != null){
+            painting.getMessages().forEach(message -> messageRepository.delete(message));
+        }
         paintingRepository.delete(painting);
     }
 }
