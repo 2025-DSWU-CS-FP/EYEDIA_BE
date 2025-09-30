@@ -91,6 +91,9 @@ public class PaintingService {
     public void deletePainting(Long paintingId) {
         Painting painting = paintingRepository.findByPaintingId(paintingId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.PAINTING_NOT_FOUND));
+        if(painting.getMessages() != null){
+            painting.getMessages().forEach(message -> messageRepository.delete(message));
+        }
         paintingRepository.delete(painting);
     }
 }
