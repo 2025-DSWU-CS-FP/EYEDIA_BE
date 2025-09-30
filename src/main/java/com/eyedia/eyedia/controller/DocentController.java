@@ -71,7 +71,7 @@ public class DocentController {
                 .audioUrl(audioUrl)
                 .build();
 
-        messagingTemplate.convertAndSendToUser(principal.getName(),"/room/user-" + principal.getName(), dto);
+        messagingTemplate.convertAndSendToUser(principal.getName(),"/room/" + req.getPaintingId(), dto);
         return dto;
     }
 }
