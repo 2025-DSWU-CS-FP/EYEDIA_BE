@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -43,7 +44,8 @@ public class DetectionEventController {
         if (list.isEmpty()) {
             throw new GeneralException(ErrorStatus.PAINTING_NOT_FOUND);
         } else if (list.size() > 1) {
-            throw new GeneralException(ErrorStatus.PAINTING_CONFLICT);
+            List<Long> ids = list.stream().map(Painting::getPaintingId).toList();
+            throw new GeneralException(ErrorStatus.PAINTING_CONFLICT, Map.of("duplicatedPaintingIds", ids));
         } else {
             Painting painting = list.get(0);
             var exhibition = exhibitionRepository.findByPaintingsPaintingId(painting.getPaintingId())
