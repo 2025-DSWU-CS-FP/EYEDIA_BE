@@ -97,7 +97,7 @@ public class DocentChatService {
         ResponseCreateParams params = ResponseCreateParams.builder()
                 .model(ChatModel.CHATGPT_4O_LATEST)
                 .input(ResponseCreateParams.Input.ofResponse(inputs))
-                .maxOutputTokens(350)
+                .maxOutputTokens(2000)
                 .build();
 
         Response resp = openAI.responses().create(params);
