@@ -48,7 +48,7 @@ public class DocentController {
                 .build();
         messageRepository.save(a);
 
-        String audioUrl = ttsService.synthesizeAndGetUrl(answer.text(), "alloy");
+//        String audioUrl = ttsService.synthesizeAndGetUrl(answer.text(), "alloy");
 
         // 젯슨에 재생시키도록 작업 큐에 넣기 (폴링 A안)
         /*
@@ -68,7 +68,7 @@ public class DocentController {
                 .paintingId(req.getPaintingId())
                 .answer(answer.text())
                 .model(answer.model())
-                .audioUrl(audioUrl)
+//                .audioUrl(audioUrl)
                 .build();
 
         messagingTemplate.convertAndSendToUser(principal.getName(),"/room/" + req.getPaintingId(), dto);
