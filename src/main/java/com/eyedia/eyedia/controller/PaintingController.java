@@ -12,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/paintings")
@@ -47,10 +49,9 @@ public class PaintingController {
 //        return ResponseEntity.ok(paintingService.getChatMessagesByPaintingId(chatRoomId));
 //    }
 
-    @Operation(summary = "작품 삭제", description = "해당 그림의 objectId를 입력하면 삭제됩니다.")
-    @DeleteMapping("/{paintingId}")
-    public ApiResponse<?> deletePainting(@PathVariable Long paintingId) {
-        paintingService.deletePainting(paintingId);
-        return ApiResponse.of(SuccessStatus._OK,null);
+    @Operation(summary = "작품 삭제", description = "null user인 painting이 삭제됩니다.")
+    @DeleteMapping
+    public ApiResponse<?> deletePainting() {
+        return ApiResponse.of(SuccessStatus._OK,"해당 painting 삭제 완료 : " + paintingService.deletePainting());
     }
 }

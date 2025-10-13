@@ -32,7 +32,8 @@ public class DocentChatService {
         String system = """
             너는 미술관 도슨트야. 한국어로 친절하고 자연스럽게 설명해.
             - 제공된 작품 정보와 질문만 사용(추측 금지)
-            - 3~6문장, 마지막에 짧은 질문으로 마무리
+            - 3~6문장으로 답변
+            - 그림 작품 외 다른 질문 차단
             """;
 
         String user = """
@@ -54,20 +55,23 @@ public class DocentChatService {
     }
 
     public Prompt gazeAreaPrompt(String paintingTitle, String quadrant, String description){
+        String quadrantPosition = convertQuadrantToPosition(quadrant);
+
         String system = """
-                당신은 미술관의 도슨트입니다.\s
-                관람객에게 친절하고 감성적인 어조로 작품 속 객체를 설명해야 합니다.\s
-                너무 기술적이거나 딱딱하지 않게 풀어주세요.\s
-                그림에 없는 내용은 설명하지 말고, 해당 그림 외의 다른 그림은 언급하지 마세요.\s
-                작품 전체 설명보다는 각 객체에 대한 설명을 중심으로 해설해주세요.
+                너는 미술관 도슨트야. 한국어로 친절하고 자연스럽게 설명해.
+                - 제공된 작품 정보와 질문만 사용(추측 금지)
+                - 3~6문장으로 답변
+                - 그림 작품 외 다른 질문 차단
+                - 그림에 없는 내용은 설명하지 말고, 해당 그림 외의 다른 그림은 언급하지 마세요.
+                - 작품 전체 설명보다는 각 객체에 대한 설명을 중심으로 해설해주세요.
             """;
 
         String user = """
-                아래는 %s 그림의 %s 분면에서 감지된 후보 객체 설명입니다: \s
+                아래는 %s 그림의 %s 에서 감지된 후보 객체 설명입니다: \s
                 %s\s
                 → 위의 내용을 바탕으로 관람객에게 설명을 작성해주세요.
             """.formatted(
-                nz(paintingTitle), nz(quadrant),
+                nz(paintingTitle), nz(quadrantPosition),
                 nz(description)
         );
 
@@ -117,4 +121,15 @@ public class DocentChatService {
 
     public record Prompt(String system, String user) {}
     public record Answer(String text, String model) {}
+
+    public String convertQuadrantToPosition(String quadrant) {
+        return switch (quadrant) {
+            case "Q1" -> "왼쪽 상단";
+            case "Q2" -> "오른쪽 상단";
+            case "Q3" -> "왼쪽 하단";
+            case "Q4" -> "오른쪽 하단";
+            default -> "잘못된 분면";  // 잘못된 입력에 대비한 기본값
+        };
+    }
+
 }

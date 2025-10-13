@@ -16,6 +16,7 @@ import com.eyedia.eyedia.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -88,12 +89,14 @@ public class PaintingService {
         return painting.getPaintingId();
     }
 
-    public void deletePainting(Long paintingId) {
-        Painting painting = paintingRepository.findByPaintingId(paintingId)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.PAINTING_NOT_FOUND));
-        if(painting.getMessages() != null){
-            painting.getMessages().forEach(message -> messageRepository.delete(message));
-        }
-        paintingRepository.delete(painting);
+    public List<Long> deletePainting() {
+        List<Painting> paintings = paintingRepository.findNullUserByArtId(null);
+        List<Long> paintingIds = new ArrayList<>();
+        paintings.forEach(painting -> {
+            paintingIds.add(painting.getPaintingId());
+            messageRepository.deleteAll(painting.getMessages());
+            paintingRepository.delete(painting);
+        });
+        return paintingIds;
     }
 }

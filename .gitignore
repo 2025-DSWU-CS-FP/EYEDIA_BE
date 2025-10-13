@@ -22,6 +22,7 @@ bin/
 *.iws
 *.iml
 *.ipr
+*.mp3
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
