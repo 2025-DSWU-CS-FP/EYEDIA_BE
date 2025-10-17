@@ -40,7 +40,9 @@ public class AuthService {
                 .id(dto.getId())
                 .pw(passwordEncoder.encode(dto.getPw()))
                 .currentLocation(dto.getCurrentLocation())
+                .oauthKey("eyedia")
                 .build();
+
         user.setSelectedKeywords(dto.getKeywords());
         userRepository.save(user);
     }
