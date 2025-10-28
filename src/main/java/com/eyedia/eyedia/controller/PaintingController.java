@@ -36,18 +36,11 @@ public class PaintingController {
         return ResponseEntity.ok(paintingService.confirmPainting(paintingId));
     }
 
-//    @Operation(summary = "그림 설명 조회", description = "DB에서 그림에 대한 전체적인 설명을 조회합니다.")
-//    @GetMapping("/{paintingId}/db-description")
-//    public ResponseEntity<?> getDescription(@PathVariable Long paintingId) {
-//        // userFacingService.getLatestDescription(paintingId)
-//        return ResponseEntity.ok().build();
-//    }
-    // 채팅 히스토리 가져오기
-//    @Operation(summary = "채팅 메시지 목록 조회", description = "특정 그림에 대한 사용자-AI 대화 내역을 조회합니다.")
-//    @GetMapping("/{chatRoomId}/chats")
-//    public ResponseEntity<?> getChatMessages(@PathVariable Long chatRoomId) {
-//        return ResponseEntity.ok(paintingService.getChatMessagesByPaintingId(chatRoomId));
-//    }
+    @Operation(summary = "채팅 메시지 목록 조회", description = "특정 그림에 대한 사용자-AI 대화 내역을 조회합니다.")
+    @GetMapping("/{paintingId}/chats")
+    public ResponseEntity<?> getChatMessages(@PathVariable Long paintingId) {
+        return ResponseEntity.ok(paintingService.getChatMessagesByPaintingId(paintingId));
+    }
 
     @Operation(summary = "작품 삭제", description = "null user인 painting이 삭제됩니다.")
     @DeleteMapping
