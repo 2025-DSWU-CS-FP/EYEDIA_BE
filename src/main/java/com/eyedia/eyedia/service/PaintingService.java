@@ -3,8 +3,10 @@ package com.eyedia.eyedia.service;
 
 import com.eyedia.eyedia.config.SecurityUtil;
 import com.eyedia.eyedia.domain.Exhibition;
+import com.eyedia.eyedia.domain.Message;
 import com.eyedia.eyedia.domain.Painting;
 import com.eyedia.eyedia.domain.User;
+import com.eyedia.eyedia.dto.MessageDTO;
 import com.eyedia.eyedia.dto.PaintingMetadataRequest;
 import com.eyedia.eyedia.dto.UserFacingDTO;
 import com.eyedia.eyedia.global.error.exception.GeneralException;
@@ -16,6 +18,7 @@ import com.eyedia.eyedia.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,17 +58,16 @@ public class PaintingService {
     }
 
 
-//    public List<MessageDTO.ChatMessageDTO> getChatMessagesByPaintingId(Long paintingId) {
-//        return messageRepository.findByPainting_PaintingIdOrderByCreatedAtAsc(paintingId).stream()
-//                .map(message -> MessageDTO.ChatMessageDTO.builder()
-//                        .sender(message.getSender().name())
-//                        .content(message.getContent())
-//                        .paintingId(paintingId)
-//                        .timestamp(message.getCreatedAt().toString())
-//                        .build())
-//                .toList();
-//        return List.of();
-//    }
+    public List<MessageDTO.ChatMessageDTO> getChatMessagesByPaintingId(Long paintingId) {
+        return messageRepository.findByPainting_PaintingIdOrderByCreatedAtAsc(paintingId).stream()
+                .map(message -> MessageDTO.ChatMessageDTO.builder()
+                        .sender(message.getSender())
+                        .content(message.getContent())
+                        .paintingId(paintingId)
+                        .timestamp(message.getCreatedAt().toString())
+                        .build())
+                .toList();
+    }
 
     public Long saveMetadata(PaintingMetadataRequest request) {
         Exhibition exhibition = exhibitionRepository.findById(request.getExhibition())
