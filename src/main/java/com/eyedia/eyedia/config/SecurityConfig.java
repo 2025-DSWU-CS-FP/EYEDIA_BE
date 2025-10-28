@@ -103,6 +103,7 @@ public class SecurityConfig {
 
                 // 네이버 OAuth2 로그인 파이프라인
                 .oauth2Login(oauth -> oauth
+                        .loginPage("/auth/login")
                         .userInfoEndpoint(ui -> ui
                                 .userService(customOAuth2UserService)
                                 .oidcUserService(customOidcUserService)
