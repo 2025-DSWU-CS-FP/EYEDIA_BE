@@ -2,13 +2,13 @@ package com.eyedia.eyedia.service;
 
 import com.eyedia.eyedia.config.jwt.JwtProvider;
 import com.eyedia.eyedia.domain.Exhibition;
+import com.eyedia.eyedia.domain.Painting;
+import com.eyedia.eyedia.domain.User;
 import com.eyedia.eyedia.domain.enums.ViewedSort;
 import com.eyedia.eyedia.dto.ExhibitionDTO;
 import com.eyedia.eyedia.global.error.exception.GeneralException;
 import com.eyedia.eyedia.global.error.status.ErrorStatus;
-import com.eyedia.eyedia.repository.BookmarkRepository;
-import com.eyedia.eyedia.repository.ExhibitionRepository;
-import com.eyedia.eyedia.repository.VisitRepository;
+import com.eyedia.eyedia.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -30,6 +30,8 @@ public class ExhibitionQueryService {
     private final VisitRepository visitRepository;
     private final BookmarkRepository bookmarkRepository;
     private final JwtProvider jwtProvider;
+    private final PaintingRepository paintingRepository;
+    private final UserRepository userRepository;
 
     /**
      * 메인페이지 인기 전시 (전역 북마크 순) - DTO 리스트
@@ -81,6 +83,10 @@ public class ExhibitionQueryService {
 
     // 나의 전시 - 내가 방문한 전시 상세 페이지 & 발췌 기록들 보여주기
     public ExhibitionDTO.MyExhibitionDetailResponseDTO getMyVisitedExhibitionDetail(Long uid, Long exhibitionId) {
+        //사용자 조회
+        var user = userRepository.findById(uid)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
+
         // 전시 조회
         var exhibition = popularityRepository.findById(exhibitionId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.INVALID_EXHIBITION_ID));
@@ -91,10 +97,17 @@ public class ExhibitionQueryService {
         if (visitedAt == null) {
             throw new GeneralException(ErrorStatus.VISIT_RECORD_NOT_FOUND);
         }
-        // 데이터 꺼내오기
-        var dto = toMyDetailDTo(exhibition, visitedAt, isBookmarked(uid, exhibitionId));
+        // 채팅방 조회
+        List<ExhibitionDTO.PaintingCard> paintings = paintingRepository.findByUserAndExhibition(user, exhibition).stream()
+                .map(painting -> ExhibitionDTO.PaintingCard.builder()
+                        .paintingId(painting.getPaintingId())
+                        .paintingTitle(painting.getTitle())
+                        .paintingAuthor(painting.getArtist())
+                        .image(painting.getImageUrl())
+                        .build()).toList();
 
-        // 발췌 조회
+        // 데이터 꺼내오기
+        var dto = toMyDetailDTo(exhibition, visitedAt, isBookmarked(uid, exhibitionId), paintings);
 
         // return
         return dto;
@@ -153,14 +166,14 @@ public class ExhibitionQueryService {
                 .build();
     }
 
-    private ExhibitionDTO.MyExhibitionDetailResponseDTO toMyDetailDTo(Exhibition e, LocalDateTime time, boolean isBookmarked) {
+    private ExhibitionDTO.MyExhibitionDetailResponseDTO toMyDetailDTo(Exhibition e, LocalDateTime time, boolean isBookmarked, List<ExhibitionDTO.PaintingCard> paintings) {
         return ExhibitionDTO.MyExhibitionDetailResponseDTO.builder()
                 .exhibitionId(e.getExhibitionsId())
                 .exhibitionTitle(e.getTitle() != null ? e.getTitle() : "미정")
                 .exhibitionDate(formatDateRange(e))
                 .exhibitionImage(e.getPosterUrl() != null ? e.getPosterUrl() : "미정")
                 .exhibitionAuthor(e.getArtist())
-                .scrapCards(new ArrayList<>())
+                .paintings(paintings)
                 .visitedAt(time)
                 .bookmark(isBookmarked)
                 .gallery(e.getGallery() != null ? e.getGallery() : "미정")

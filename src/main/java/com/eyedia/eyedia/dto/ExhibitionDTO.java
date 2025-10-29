@@ -1,5 +1,6 @@
 package com.eyedia.eyedia.dto;
 
+import com.eyedia.eyedia.domain.Painting;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -63,7 +64,7 @@ public class ExhibitionDTO {
     @Getter
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
     public static class MyExhibitionDetailResponseDTO {
-        // 전시 타이틀, 갤러리, 작품 갯수, 썸네일, 마지막 감상일, 북마크 여, 발췌 리스트
+        // 전시 타이틀, 갤러리, 작품 갯수, 썸네일, 마지막 감상일, 북마크 여, 채팅방 리스트
 
         Long exhibitionId;
         String exhibitionTitle;
@@ -75,14 +76,18 @@ public class ExhibitionDTO {
 
         public boolean bookmark;
 
-        List<ScrapCard> scrapCards;
+        List<PaintingCard> paintings;
     }
 
     @Builder
     @Getter
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
-    public static class ScrapCard {
-        String data;
+    public static class PaintingCard {
+        //이미지, 작품명, 작가이름
+        Long paintingId;
+        String image;
+        String paintingTitle;
+        String paintingAuthor;
     }
 
 }
