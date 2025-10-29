@@ -28,7 +28,7 @@ public class ChatController {
     private final MessageRepository messageRepository;
 
     @MessageMapping("/ask")
-    public void sendMessage(@Payload MessageDTO.AskRequest req, Principal principal) {
+    public void sendMessage(@Payload MessageDTO.AskRequest req) {
         var p = paintingRepository.findByPaintingId(req.getPaintingId())
                 .orElseThrow(() -> new GeneralException(ErrorStatus.PAINTING_NOT_FOUND));
 
@@ -55,6 +55,6 @@ public class ChatController {
                 .model(answer.model())
                 .build();
 
-        messagingTemplate.convertAndSendToUser(principal.getName(),"/room/" + req.getPaintingId(), dto);
+        messagingTemplate.convertAndSend("/room/" + req.getPaintingId(), dto);
     }
 }
