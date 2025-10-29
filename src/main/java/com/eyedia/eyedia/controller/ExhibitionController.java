@@ -122,7 +122,7 @@ public class ExhibitionController {
     }
 
     // 나의 전시 - 전시 상세 페이지 조회
-    @Operation(summary = "사용자가 방문한 전시의 상세페이지 조회 API", description = "사용자가 방문한 전시의 상세페이지와 발췌 카드 리스트 조회")
+    @Operation(summary = "사용자가 방문한 전시의 상세페이지 조회 API", description = "사용자가 방문한 전시의 상세페이지와 채팅방 조회")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "EXHIBITION400", description = "유효하지 않은 id값입니다.")
