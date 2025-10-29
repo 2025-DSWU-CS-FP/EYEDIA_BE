@@ -28,8 +28,11 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     private final UserRepository userRepository;
     private final JwtProvider jwtProvider;
 
-    @Value("${app.oauth.success-redirect}")
-    private String successRedirect; // e.g., https://eyedia.site/oauth/success
+    @Value("${app.oauth.success-redirect.naver}")
+    private String successRedirectNaver;
+
+    @Value("${app.oauth.success-redirect.google}")
+    private String successRedirectGoogle;
 
     @Override
     @SuppressWarnings("unchecked")
@@ -77,7 +80,9 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         String token = jwtProvider.generateToken(user.getUsersId());
         log.debug("[OAuth] JWT issued for usersId={}", user.getUsersId());
 
-        String redirectUrl = successRedirect + "#token=" + URLEncoder.encode(token, StandardCharsets.UTF_8);
-        response.sendRedirect(redirectUrl);
+        // 프론트엔드로 JWT 전달
+        String redirectUrlN = successRedirectNaver + "?token=" + token;
+        String redirectUrlG = successRedirectGoogle + "?token=" + URLEncoder.encode(token, StandardCharsets.UTF_8);
+        response.sendRedirect(redirectUrlN);
     }
 }

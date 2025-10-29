@@ -1,5 +1,6 @@
 server:
-  port: 8080
+  # port: 8080
+  forward-headers-strategy: framework
 
 spring:
   config:
@@ -19,7 +20,7 @@ spring:
               - birthyear
             client-name: Naver
             authorization-grant-type: authorization_code
-            redirect-uri: http://localhost:8080/login/oauth2/code/naver
+            redirect-uri: https://eyedia.site/login/oauth2/code/naver
           google:
             client-id: ${GOOGLE_CLIENT_ID}
             client-secret: ${GOOGLE_CLIENT_SECRET}
@@ -28,7 +29,7 @@ spring:
               - profile # name
               - https://www.googleapis.com/auth/user.gender.read
               - https://www.googleapis.com/auth/user.birthday.read
-
+            redirect-uri: https://eyedia.site/login/oauth2/code/google
         provider:
           naver:
             authorization-uri: https://nid.naver.com/oauth2.0/authorize
@@ -72,4 +73,6 @@ eyedia:
 
 app:
   oauth:
-    success-redirect: https://eyedia.netlify.app/
+    success-redirect:
+      naver: https://eyedia.netlify.app/auth/naver/callback
+      google: https://eyedia.netlify.app/auth/google/callback
