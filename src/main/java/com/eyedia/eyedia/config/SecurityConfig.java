@@ -103,7 +103,12 @@ public class SecurityConfig {
 
                 // 네이버 OAuth2 로그인 파이프라인
                 .oauth2Login(oauth -> oauth
-                        .loginPage("/auth/login")
+                        .authorizationEndpoint(authEndpoint ->
+                                authEndpoint.baseUri("/oauth2/authorization")  // 로그인 시작 URL
+                        )
+                        .redirectionEndpoint(redir ->
+                                redir.baseUri("/login/oauth2/code/*")         // 네이버 redirect-uri
+                        )
                         .userInfoEndpoint(ui -> ui
                                 .userService(customOAuth2UserService)
                                 .oidcUserService(customOidcUserService)
