@@ -3,7 +3,6 @@ package com.eyedia.eyedia.service;
 
 import com.eyedia.eyedia.config.SecurityUtil;
 import com.eyedia.eyedia.domain.Exhibition;
-import com.eyedia.eyedia.domain.Message;
 import com.eyedia.eyedia.domain.Painting;
 import com.eyedia.eyedia.domain.User;
 import com.eyedia.eyedia.dto.MessageDTO;
@@ -16,12 +15,14 @@ import com.eyedia.eyedia.repository.MessageRepository;
 import com.eyedia.eyedia.repository.PaintingRepository;
 import com.eyedia.eyedia.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PaintingService {
@@ -33,14 +34,28 @@ public class PaintingService {
 
     public UserFacingDTO.PaintingConfirmResponse confirmPainting(Long paintingId) {
         Long userId = SecurityUtil.getCurrentUserId();
+        Painting paintingRoom = paintingRepository.findByPaintingId(paintingId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.PAINTING_NOT_FOUND));
+
+        log.info("userId from SecurityUtil: {}", userId);
+        log.info("artId: {}", paintingRoom.getArtId());
+
+        List<Painting> paintingList = paintingRepository.findByUserAndArtId(userId, paintingRoom.getArtId());
+
+        for (Painting p : paintingList) {
+            log.info("painting id: {}, artId: {}, user: {}", p.getPaintingId(), p.getArtId(),
+                    p.getUser() != null ? p.getUser().getId() : "NULL");
+        }
+
+        if(!paintingList.isEmpty()) {
+            List<Long> ids = paintingList.stream().map(Painting::getPaintingId).toList();
+            throw new GeneralException(ErrorStatus.PAINTING_CONFLICT, Map.of("기존 감상한 이력", ids));
+        }
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
 
         // 사용자 연결
-        Painting paintingRoom = paintingRepository.findByPaintingId(paintingId)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.PAINTING_NOT_FOUND));
-
         paintingRoom.setUser(user);
 
         Painting response = paintingRepository.save(paintingRoom);
@@ -92,7 +107,7 @@ public class PaintingService {
     }
 
     public List<Long> deletePainting() {
-        List<Painting> paintings = paintingRepository.findNullUserByArtId(null);
+        List<Painting> paintings = paintingRepository.findNullUserByArtId();
         List<Long> paintingIds = new ArrayList<>();
         paintings.forEach(painting -> {
             paintingIds.add(painting.getPaintingId());

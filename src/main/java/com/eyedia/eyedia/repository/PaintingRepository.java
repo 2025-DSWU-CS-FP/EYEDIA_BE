@@ -13,12 +13,13 @@ import java.util.Optional;
 
 @Repository
 public interface PaintingRepository extends JpaRepository<Painting, Long> {
-    @Query("""
-    select p from Painting p
-    where (:artId is null or p.artId = :artId)
-      and p.user is null
-""")
-    List<Painting> findNullUserByArtId(@Param("artId") Long artId);
+
+    @Query("SELECT p FROM Painting p WHERE p.artId = :artId AND p.user.usersId = :userId")
+    List<Painting> findByUserAndArtId(@Param("userId") Long userId, @Param("artId") Long artId);
+
+    @Query("SELECT p FROM Painting p WHERE p.user is null")
+    List<Painting> findNullUserByArtId();
+
     Optional<Painting> findByPaintingId(Long paintingId);
     List<Painting> findByArtId(Long artId);
     List<Painting> findByUserAndExhibition(User user, Exhibition exhibition);
