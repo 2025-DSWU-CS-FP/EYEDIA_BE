@@ -17,8 +17,8 @@ public interface PaintingRepository extends JpaRepository<Painting, Long> {
     @Query("SELECT p FROM Painting p WHERE p.artId = :artId AND p.user.usersId = :userId")
     List<Painting> findByUserAndArtId(@Param("userId") Long userId, @Param("artId") Long artId);
 
-    @Query("SELECT p FROM Painting p WHERE p.user is null")
-    List<Painting> findNullUserByArtId();
+    @Query("SELECT p FROM Painting p WHERE p.user is null AND (p.artId = :artId OR :artId is null)")
+    List<Painting> findNullUserByArtId(@Param("artId") Long artId);
 
     Optional<Painting> findByPaintingId(Long paintingId);
     List<Painting> findByArtId(Long artId);
