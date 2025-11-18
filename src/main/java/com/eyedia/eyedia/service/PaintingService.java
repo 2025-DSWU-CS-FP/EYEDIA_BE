@@ -113,7 +113,7 @@ public class PaintingService {
     }
 
     public List<Long> deletePainting() {
-        List<Painting> paintings = paintingRepository.findNullUserByArtId();
+        List<Painting> paintings = paintingRepository.findNullUserByArtId(null);
         List<Long> paintingIds = new ArrayList<>();
         paintings.forEach(painting -> {
             paintingIds.add(painting.getPaintingId());

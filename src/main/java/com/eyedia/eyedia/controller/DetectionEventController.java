@@ -40,7 +40,7 @@ public class DetectionEventController {
 
         MessageDTO.ChatImageResponseDTO message;
 
-        var list = paintingRepository.findByUserAndArtId(null, artId);
+        var list = paintingRepository.findNullUserByArtId(artId);
         if (list.isEmpty()) {
             throw new GeneralException(ErrorStatus.PAINTING_NOT_FOUND);
         } else if (list.size() > 1) {
